@@ -1,0 +1,16 @@
+<tool id='velDisp_mass_rel_z0' name='Sigma-M relation' version='0.0'>
+	<description>Compute dark matter velocity dispersion - halo mass relation</description>
+	<command interpreter='python2.7'>
+		from velDisp_tools import velDisp_mass_rel_z0 as func
+		$output = func('$input')
+	</command>
+	<inputs>
+		<param format='haloFinder_binary' name='input', type='file', label='SO Properties file' 
+		       help='Input parameter should be the path to a .soproperties file, resultant from
+			     running a halo finder on a simulation snapshot.'
+		>
+	</inputs>
+	<outputs>
+		<data forat='csv' name='output'>
+	</outputs>
+</tool>
