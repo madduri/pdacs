@@ -1,0 +1,68 @@
+<tool id="prepare_config_halo_finder" name="Prepare Input for Halo Finder"  version="1.0.4">
+  <description>using DBM file</description>
+  <command interpreter="python">
+    prepare_config_HaloTestP.py
+    --input=$input
+    --input-type=$inputtype
+    --distribute-type=$distribute
+    --massFactor=$massFactor
+    --overloadZoneSize=$overloadZoneSize
+    --linkingLength=$linkingLength
+    --minParticlesPerHalo=$minParticlesPerHalo
+    --centerFinder=$centerFinder
+    --outputParticleFraction=$outputParticleFraction
+    --minNumberParticles=$minNumberParticles
+    --numNodes=$numNodes
+    --numProcs=$numProcs
+    --exeTime=$exeTime
+    --exeQueue=$exeQueue
+    --outputFOFPorpertiesFile=$FOFProperties
+    --outputSODPropertiesFile=$SOProperties
+    --outputParticlesPerHaloFile=$HaloParticles
+    --outputAllParticleTagsFile=$ParticleHaloTagFile
+    --outputSODPropertyBinsFile=$SOHaloProfiles
+    --dbiFile=$Output  
+  </command>
+  <inputs>
+    <param name="input" type="data" format="dbm" size="100" label="Input Snapshot"/>
+      <sanitizer sanitize="False"/>
+    <param name="inputtype" type="select" label="Input Format">
+	<option value="BLOCK">Gadget-2</option>
+	<option value="RECORD">Cosmo</option>
+    </param>
+    <param name="distribute" type="select" label="Distribution Type">
+	<option value="ROUND_ROBIN">Round robin (for Gadget-2 or Cosmo)</option>
+	<option value="ONE_TO_ONE">One to one (for Cosmo)</option>
+    </param>
+    <param name="massFactor" type="float" label="Mass factor (all masses read are multiplied by this). Default unit is Msun/h." value="1e10"/>
+    <param name="overloadZoneSize" type="float" label="Overload zone size [Mpc/h]" value="5.0"/>
+    <param name="linkingLength" type="float" label="Minimum distance between particles in a halo (bb)" value="0.20"/>
+    <param name="minNumberParticles" type="integer" label="Minimum number of particles in an FOF halo" value="300"/>
+    <!--param name="deut" type="float" label="Deut" value="0.0231"/-->
+    <param name="centerFinder" type="select" label="Center Finder">
+	<option value="MCP">MCP (most connected particle)</option>
+	<option value="MBP">MBP (most bound particle)</option>
+    </param>
+    <param name="minParticlesPerHalo" type="integer" label="The minimum number of particles per halo in the fractional output" value="2"/>    
+    <param name="outputParticleFraction" type="float" label="The fraction of all particles in halos meeting the halo size cut to output" value="1.0"/>
+  </inputs>
+  <outputs>
+    <data format="txt" type="data" name="Output" label="${input.name} - Configuration file for HaloFinder"/>
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.txt"/>
+    </test>
+  </tests>
+  <help>
+Create an input file for the HaloFinder tool.
+
+Distance factor (all positions read are multiplied by this). Default unit is Mpc/h.
+   
+RHO_C convert factor: Default value of 2.77e11 in units of Msun/h and Mpc/h.
+
+SOD_MASS convert factor: SOD_MASS is used to divide FOF halo mass to get initial SOD radius. Default value of 1.0e14 in units of Msun/h.
+  </help>
+</tool>

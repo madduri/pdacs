@@ -1,0 +1,13 @@
+<tool id="echo" name="Echo something">
+  <description>whatever you want</description>
+  <command>
+   echo $input_text > $output
+</command>
+
+<inputs>
+    <param name="input_text" type="text" label="What do you want to echo to galaxy" value="Write something"/>
+</inputs>
+<outputs>
+    <data format="txt" name="output" />
+</outputs>
+</tool>

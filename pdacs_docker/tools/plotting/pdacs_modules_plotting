@@ -1,0 +1,4 @@
+bar_chart.xml:    <requirement type="python-module">Gnuplot</requirement>
+bar_chart.xml:    <requirement type="python-module">Numeric</requirement>
+histogram2.xml:    <requirement type="python-module">rpy</requirement>
+scatterplot.xml:    <requirement type="python-module">rpy</requirement>

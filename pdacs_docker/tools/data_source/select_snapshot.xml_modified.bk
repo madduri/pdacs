@@ -1,0 +1,42 @@
+<tool id="select_model" name="Select Snapshot">
+  <description>from Coyote Universe Simulations</description>
+  <command interpreter="bash">Model.sh $inputmodel $inputSize $inputRealization $input $SelectedSnapshot</command>
+  <inputs>     
+      <param name="inputmodel" type="select" label="Input Model">
+       <options from_file="coyote.loc">
+            <column name="name" index="2"/>
+            <column name="value" index="2"/>
+            <filter type="unique_value" column="2"/>
+       </options>
+      </param>
+      <param name="inputSize" type="select" label="Box Size">
+       <options from_file="coyote.loc">
+            <column name="name" index="3"/>
+            <column name="value" index="3"/>
+            <filter type="param_value" ref="inputmodel" column="2"/>
+            <filter type="unique_value" column="3"/>
+       </options>
+      </param>
+      <param name="inputRealization" type="select" label="Realization based on different seed values">
+          <options from_file="coyote.loc">
+            <column name="name" index="4"/>
+            <column name="value" index="4"/>
+            <filter type="param_value" ref="inputmodel" column="2"/>
+            <filter type="param_value" ref="inputSize" column="3"/>
+            <filter type="unique_value" column="4"/>
+          </options>
+      </param>
+      <param name="input" type="select" label="Input Snapshot" help="Choosing Input Snapshot files" dynamic_options="ds_inputOptions(inputmodel,inputSize,inputRealization)"/>
+  </inputs>
+  <outputs>
+    <data format="dbm" type="data" name="SelectedSnapshot" label="${input.value}"/>
+  </outputs>
+  <code file="extra_code_for_snapshot_list.py" /> 
+  <help>
+
+**Model numbers and their properties are listed in the following table. Users can take a look at properties before making a model selection**
+ .. image:: ${static_path}/images/table.png
+   :height: 348
+   :width: 580
+  </help>
+</tool>

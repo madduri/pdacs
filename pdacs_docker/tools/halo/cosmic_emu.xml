@@ -1,0 +1,47 @@
+<tool id="cosmic_emu" name="P(k) Emulator">
+  <description>Cosmic Emu to predict matter power spectrum</description>
+  <!-- The final argument of '2' configures cosmic_emu to use output type -->
+  <!-- P(k)  -->
+  <!--command>/global/project/projectdirs/hacc/PDACS/cosmic_emu/emu.sh $output $omega_m $omega_b $n_s $sigma_8 $w $z 2</command-->
+  <command>
+    #if $source.source_select=="Use_Snapshot"
+        ${__root_dir__}/tools/halo/emu-snapshot.sh $source.input $output
+    #else
+        ${__root_dir__}/tools/halo/emu.sh $output $source.omega_m $source.omega_b $source.n_s $source.w $source.sigma_8 $source.z 2
+    #end if
+  </command>
+  <inputs>
+    <conditional name="source">
+      <param name="source_select" type="select" label="Specify the input">
+        <option value="Use_Snapshot">Use Snapshot</option>
+        <option value="Set_Values">Set Values</option>
+      </param>
+    <when value="Use_Snapshot">
+     <param name="input" type="data" format="dbm" size="100" label="Input Snapshot"/>
+      <sanitizer sanitize="False"/>
+    </when>
+    <when value="Set_Values">
+     <param name="omega_m"  label="Omega_m h^2"  type="float" value="0.1279" min="0.120" max="0.155"/>
+     <param name="omega_b"  label="Omega_b h^2"  type="float" value="0.0232" min="0.0215" max="0.0235"/>
+     <param name="n_s"      label="n_s"          type="float" value="0.8629" min="0.85" max="1.05"/>
+     <param name="w"        label="w"            type="float" value="-1.184" min="-1.30" max="-0.70"/>
+     <param name="sigma_8"  label="sigma_8"      type="float" value="0.812"  min="0.616" max="0.9"/>
+     <param name="z"        label="z"            type="float" value="1.0" min="0.0" max="1.0"/>
+    <!--param name="otype"    label="outputtype"   type="float" value="2.0" help="Value is 0, 1, or 2. 2 means use P(K)."/-->
+     <sanitizer sanitize="False"/>
+    </when>
+   </conditional>
+  </inputs>
+
+  <outputs>
+    <data format="csv" name="output" />
+  </outputs>
+
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Nonzero return status" />
+  </stdio>
+
+  <help>
+    Run the Cosmic Emu tool, using the supplied inputs, writing the given output file.
+  </help>
+</tool>

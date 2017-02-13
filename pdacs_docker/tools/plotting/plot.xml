@@ -1,0 +1,51 @@
+<tool id="plot" name="Plot Mass Function">
+
+  <description>Plot Mass functions</description>
+
+  <command interpreter="Rscript">
+    plot.r --output=$output
+    --table=sod_mf
+    $best
+    $errorbar
+    $line
+    $input
+  </command>
+
+  <inputs>
+    <param name="input"
+           type="data"
+	   format="db"
+           label="Mass function output file to be plotted"/>
+    <param name="best" type="boolean"
+           truevalue=""
+           falsevalue=""
+           label="Plot best fit curve"
+           checked="true"/>
+    <param name="errorbar"
+           type="boolean"
+           truevalue="--errorbar"
+           falsevalue=""
+           label="Plot error bars"
+           checked="false"/>
+    <param name="line" 
+           type="boolean" 
+           truevalue="--line"
+           falsevalue=""
+           label="Plot line graph"
+           checked="false"/>
+  </inputs>
+
+  <outputs>
+    <data name="output" type="data" format="pdf"/>
+  </outputs>
+
+  <help>
+    Create a scatterplot of the concentration-mass data produced by the
+    cM program.
+  </help>
+
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Rscript failed\n" />
+  </stdio>
+
+</tool>

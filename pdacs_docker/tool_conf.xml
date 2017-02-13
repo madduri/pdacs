@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<toolbox>
+  <section name="Get Data" id="getext">
+    <tool file="data_source/upload.xml"/>
+    <tool file="data_source/uploadDB.xml" />
+    <!--<tool file="data_source/select_snapshot.xml"/>-->
+    <tool file="data_source/select_snapshot_alex.xml"/>
+    <tool file="filters/dump_env.xml" />
+  </section>
+  <section name="Halos - Simulation Data Analysis Tools" id="halo1">
+    <tool file="halo/HaloTestP.xml"/>
+    <!--<tool file="halo/HaloTestP_saba.xml"/>-->
+    <tool file="halo/cm_r.xml"/>
+    <tool file="halo/fof_mf.xml"/>
+    <tool file="halo/sod_mf.xml"/>
+  </section>
+  <section name="Halos - Predictors" id="halo2">
+    <tool file="halo/cM.xml"/>
+  </section>
+  <section name="2-point Functions  - Simulation Data Analysis Tools" id="tpfnc1">
+    <tool file="halo/PowerSpectrum.xml"/>
+    <tool file="halo/RS_PowerSpectrum.xml"/>
+    <tool file="halo/xi.xml"/>
+    <tool file="halo/rs_xi.xml"/>
+  </section>
+  <section name="2-point Functions  - Predictors" id="tpfnc2">
+    <tool file="halo/cosmic_emu.xml"/>
+  </section>
+  <section name="CAMB  - tools" id="camb_tools">
+    <tool file="camb/camb.xml"/>
+  </section>
+  <section name="Cosmolike  - tools" id="cosmolike_tools">
+    <tool file="cosmolike/cosmolike.xml"/>
+  </section>
+  <section name="Conversion Tools" id="convtools">
+    <!--tool file="filters/fixedValueColumn.xml" />
+    <tool file="stats/column_maker.xml" />
+    <tool file="filters/cutWrapper.xml" />
+    <tool file="filters/mergeCols.xml" /-->
+    <tool file="halo/GenericIOPrint.xml"/>
+    <tool file="filters/convert_characters.xml" />
+    <!--tool file="filters/CreateInterval.xml" />
+    <tool file="filters/cutWrapper.xml" />
+    <tool file="filters/changeCase.xml" />
+    <tool file="filters/pasteWrapper.xml" />
+    <tool file="filters/remove_beginning.xml" />
+    <tool file="filters/randomlines.xml" />
+    <tool file="filters/headWrapper.xml" />
+    <tool file="filters/tailWrapper.xml" />
+    <tool file="filters/trimmer.xml" />
+    <tool file="filters/secure_hash_message_digest.xml" />
+    <tool file="new_operations/tables_arithmetic_operations.xml" /-->
+  </section>
+  <!--section name="Comparators" id="filter">
+    <tool file="stats/compare.xml" /-->
+    <!--tool file="filters/sorter.xml" />
+    <tool file="filters/grep.xml" />
+  </section-->
+  <!--section name="Join, Subtract and Group" id="group">
+    <tool file="filters/joiner.xml" />
+    <tool file="filters/compare.xml"/>
+    <tool file="new_operations/subtract_query.xml"/>
+    <tool file="stats/grouping.xml" />
+    <tool file="new_operations/column_join.xml" />
+  </section-->
+  <section id="scidb" name="Query SciDB">
+    <tool file="scidb/query.xml" />
+  </section>
+  <section name="Graph/Display Data" id="plots">
+    <!--tool file="plotting/histogram2.xml" /-->
+<!--    <tool file="plotting/scatterplot.xml" /> -->
+    <!--tool file="plotting/bar_chart.xml" /-->
+    <tool file="plotting/multi_series_plot.xml" />
+    <tool file="stats/compare.xml" />
+    <!--tool file="plotting/boxplot.xml" /-->
+  </section>
+</toolbox>

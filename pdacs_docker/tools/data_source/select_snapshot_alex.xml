@@ -1,0 +1,49 @@
+<tool id="select_model_alex" force_history_refresh="false" name="Select Snapshot">
+  <description>from Coyote Universe Simulations</description>
+  <command>source ${__root_dir__}/tools/data_source/Model.sh $inputmodel $inputSize $inputRealization $inputmodel/$inputSize/$inputRealization/$input $SelectedSnapshot</command>
+  <inputs>     
+      <param name="inputmodel" type="select" size="100" label="Input Model" area="True" refresh_on_change="false">
+        <options from_file="coyote.loc">
+          <column name="name" index="2"/>
+          <column name="value" index="2"/>
+          <filter type="unique_value" column="2"/>
+        </options>
+      </param>
+      <param name="inputSize" type="select" label="Box Size" selected="false" refresh_on_change="false">
+        <options from_file="coyote.loc">
+          <column name="name" index="3"/>
+          <column name="value" index="3"/>
+          <filter type="param_value" ref="inputmodel" column="2"/>
+          <filter type="unique_value" column="3"/>
+        </options>
+      </param>
+      <param name="inputRealization" type="select" label="Realization based on different seed values" refresh_on_change="false" selected="false">
+           <options from_file="coyote.loc">
+            <column name="name" index="4"/>
+            <column name="value" index="4"/>
+            <filter type="param_value" ref="inputmodel" column="2"/>
+            <filter type="param_value" ref="inputSize" column="3"/>
+            <filter type="unique_value" column="4"/>
+       </options>
+       </param>
+      <param name="input" type="select" size="300" label="Input Snapshot" area="true" help="Choosing Input Snapshot files" selected="false" refresh_on_change="false">
+        <options from_file="coyote.loc">
+            <column name="name" index="6"/>
+            <column name="value" index="5"/>
+             <filter type="param_value" ref="inputmodel" column="2"/>
+             <filter type="param_value" ref="inputSize" column="3"/>
+             <filter type="param_value" ref="inputRealization" column="4"/>
+          </options>
+      </param>
+  </inputs>
+  <outputs>
+    <data format="dbm" type="data" name="SelectedSnapshot" label="${inputmodel.value}_${inputSize.value}_${inputRealization.value}_${input}"/>
+  </outputs>
+  <help>
+**Model numbers and their properties are listed in the following table. Users can take a look at properties before making a model selection**
+ .. image:: ${static_path}/images/table.png
+   :height: 348
+   :width: 580
+
+  </help>
+</tool>

@@ -1,0 +1,160 @@
+<tool id="cosmolike" name="Cosmolike"  version="1.0.0">
+  <description>Combining Probes of Large-Scale Structures</description>
+  <command>
+    #set $outname = "cov_gauss_" + str($source.survey_name)
+    module load gsl/1.15; module load fftw/3.3.2-gnu;
+    /global/homes/m/madduri/cosmolike_pdacs/top-level/pdacs/cov_shear_fourier_gauss $params_ini_file; mv $outname $output_cosmo; chmod 777 $output_cosmo
+  </command>
+  <inputs>
+    <conditional name="source">
+      <param name="source_select" type="select" label="Specify the input">
+        <option value="Use_Snapshot">Use Snapshot</option>
+        <option value="Set_Values" selected="True">Set Values</option>
+      </param>
+    <when value="Use_Snapshot">
+     <param name="inputfile" type="data" format="dbm" size="100" label="Input Snapshot"/>
+      <sanitizer sanitize="False"/>
+    </when>
+    <when value="Set_Values">
+      <param name="Omega_m" type="float" label="Overal matter density of the Universe" value="0.315" help="Omega_m"/> 
+      <param name="Omega_v" type="float" label="Vaccuum Energy density (must be 1-Omega_m for flat Universes)" value="0.685" help="Omega_v" />
+      <param name="Omega_b" type="float" label="Baryon fraction" value="0.048" help="Omega_b" />
+      <param name="sigma_8" type="float" label="normalization of density fluctuations" value="0.819" help="sigma_8" />
+      <param name="n_spec" type="float" label="Spectral index" value="0.9603" help="n_spec"/>
+      <param name="w_0" type="float" label="DE equation of state parameter" value="-1.0" help="w_0"/>
+      <param name="w_a" type="float" label="DE equation of state time-dependent parameter" value="0.0" help="w_a"/>
+      <param name="h0" type="float" label="Hubble parameter" value="0.68" help="h0"/>
+      <param name="coverH0" type="float" label="Speed of light divided by Hubble constant" value="2997.92458" help="coverH0" />
+      <param name="rho_crit" type="text" label="Critical mass density for Universe being flat" value="7.4775e+21" help="rho_crit" />
+      <param name="f_NL" type="float" label="Non-Gaussianity" value="0.0" help="f_NL" />
+      <param name="survey_name" type="select" label="Survey Name">
+        <option value="LSST" selected="true">LSST</option>
+        <option value="DES">DES</option>
+        <option value="WFIRST">WFIRST</option>
+        <option value="Euclid">Euclid</option>
+      </param>
+
+      <param name="Ncl" type="integer" label="Number of Fourier mode bins" help="Ncl" value="12"/>
+      <param name="lmin" type="integer" label="Lower limit of first Fourier mode bin" help="lmin" value="100"/>
+      <param name="lmax" type="integer" label="Upper limit of last Fourier mode bin" help="lmax" value="5000"/>
+    </when>
+    </conditional>
+  </inputs>
+
+  <outputs>
+    <!--data format="binary" type="data" name="haloCatalogFile" label="Halo Catalog" />
+    <data format="binary" type="data" name="particlesFile" label="Big Halo Particles"/-->
+    <data format="csv" name="output_cosmo" label="Cosmolike output: {$source.survey_name}" />
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.csv"/>
+    </test>
+  </tests>
+
+  <configfiles>
+    <configfile name="params_ini_file">
+output_root = cov_gauss_
+
+#if str($source.source_select) == "Use_Snapshot"
+  #import sqlite3 as lite
+  #set $con = $lite.connect(str($inputfile))
+  #set $cur = $con.cursor()
+  #$cur.execute("select value from metadata where name='Snapshot'")
+  #$con.commit()
+  #set global $row = $cur.fetchone()
+  #set $snapshotname = $row[0]
+
+  #$cur.execute("select value from metadata where name='Omega_bar'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $omega_b = float(row[0])
+
+  #$cur.execute("select value from metadata where name='Omega_m'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $omega_m = float(row[0])
+
+  #$cur.execute("select value from metadata where name='hubble'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $hubbleConst = float(row[0])
+
+  #$cur.execute("select value from metadata where name='Omega_v'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $omega_v = float(row[0])
+
+  #$cur.execute("select value from metadata where name='w_0'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $w_0 = float(row[0])
+
+  #$cur.execute("select value from metadata where name='w_a'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $w_a = float(row[0])
+
+  #$cur.execute("select value from metadata where name='n_s'")
+  #$con.commit()
+  #set $row = cur.fetchone()
+  #set $ns = float(row[0])
+
+  #set $coverH0 = "2997.92458"
+  #set $rho_crit = "7.4775e+21"
+  #set $f_NL = "0.0"
+  #set $survey_name = "LSST"
+  #set $Ncl = "12"
+  #set $lmin = "100"
+  #set $lmax = "5000"
+#else
+  #set $omega_m = $source.Omega_m
+  #set $omega_v = $source.Omega_v
+  #set $sigma_8 = $source.sigma_8
+  #set $n_spec = $source.n_spec
+  #set $w_0 = $source.w_0
+  #set $w_a = $source.w_a
+  #set $omega_b = $source.Omega_b
+  #set $h0 = $source.h0
+  #set $coverH0 = $source.coverH0
+  #set $rho_crit = $source.rho_crit
+  #set $f_NL = $source.f_NL
+  #set $survey_name = str($source.survey_name)
+  #set $Ncl  = $source.Ncl
+  #set $lmin = $source.lmin
+  #set $lmax = $source.lmax
+#end if
+#set $zpath = "/global/homes/m/madduri/cosmolike_pdacs/zdistris/zdistribution_" + $survey_name + "_conti"
+; CosmoLike config file
+
+[cosmology]              ; Description
+Omega_m = $omega_m       ; Overal matter density of the Universe
+Omega_v = $omega_v       ; Vaccuum Energy density (must be 1-Omega_m for flat Universes)
+sigma_8 = $sigma_8       ; normalization of density fluctuations
+n_spec = $n_spec         ; spectral index
+w_0 = $w_0               ; DE equation of state parameter	 
+w_a = $w_a               ; DE equation of state time-dependent parameter
+Omega_b = $omega_b       ; Baryon fraction
+h0 = $h0                 ; Hubble parameter
+coverH0 = $coverH0       ; speed of light divided by Hubble constant
+rho_crit = $rho_crit     ; critical mass density for Universe being flat
+f_NL = $f_NL             ; non-Gaussianity
+
+[survey]
+name = $survey_name      ; Options  are DES, LSST, WFIRST, Euclid
+zpath= $zpath            ; Replace according to Syrvey considered
+
+[binning]
+Ncl  = $Ncl              ; number of Fourier mode bins
+lmin = $lmin             ; lower limit of first Fourier mode bin
+lmax = $lmax              ; upper limit of last Fourier mode bin
+
+    </configfile>
+  </configfiles>
+  <help>
+
+
+  </help>
+</tool>

@@ -1,0 +1,26 @@
+<tool id="gnu_plot" name="GNUPlot">
+  <description>Plot information with GNUPlot</description>
+  <command interpreter="python">
+    GNUPlot.py
+    --input=$input
+    --outFile=$outFile
+  </command>
+  <inputs>
+    <param name="input" type="data" size="100" label="The ascii file to be graphed">
+      <sanitizer sanitize="False"/>
+    </param>
+  </inputs>
+  <outputs>
+    <data name="outFile" type="data" format="ps"/>
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.txt"/>
+    </test>
+  </tests>
+  <help>
+  Plot the ascii file with GNUPlot.
+  </help>
+</tool>
