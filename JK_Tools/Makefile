@@ -1,3 +1,8 @@
+all: powerspec.out xi.out
+
+clean: 
+	rm *.o *.out
+
 powerspec_coyote.out: powerspec_coyote.o
 	cc powerspec_coyote.o -L/opt/fftw/2.1.5.2/lib -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw -o powerspec_coyote.out
 
@@ -30,10 +35,10 @@ powerspec_haloes_averaged.o: powerspec_haloes_averaged.c
 
 
 powerspec.out: powerspec.o
-	mpicc powerspec.o ${FFTW} -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw -L/usr/common/usg/gsl/1.14/lib -lgsl -lgslcblas -lm -o powerspec.out
+	mpicc powerspec.o -L${FFTW}/lib -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw -L/usr/common/usg/gsl/1.14/lib -lgsl -lgslcblas -lm -o powerspec.out
 
 powerspec.o: powerspec.c
-	mpicc powerspec.c -c -g ${FFTW}
+	mpicc powerspec.c -c -g -I${FFTW}/include 
 
 power_cross_auto.out: power_cross_auto.o
 	cc power_cross_auto.o -L/opt/fftw/2.1.5.2/lib -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw -o power_cross_auto.out
@@ -49,10 +54,10 @@ powerspec_cross_haloes.o: powerspec_cross_haloes.c
 
 
 xi.out: xi.o
-	mpicc xi.o ${FFTW} -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw -lm -o xi.out
+	mpicc xi.o -L${FFTW}/lib -lrfftw_mpi -lfftw_mpi -lrfftw -lfftw -lm -o xi.out
 
 xi.o: xi.c
-	mpicc xi.c -c -g ${FFTW}
+	mpicc xi.c -c -g -I${FFTW}/include
 
 
 subsample.out: subsample.o
