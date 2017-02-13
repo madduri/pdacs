@@ -1,0 +1,18 @@
+
+#PBS -q debug
+#PBS -A hacc
+#PBS -l nodes=2:ppn=8
+#PBS -l walltime=00:15:00
+#PBS -N xi
+#PBS -e xi.$PBS_JOBID.err
+#PBS -o xi.$PBS.JOBID.out
+#PBS -V
+    
+module unload pgi
+module load gcc
+module load fftw
+module load gsl   
+
+cd /project/projectdirs/hacc/PDACS/JK_Tools/
+
+mpirun -n 16 ./xi.out 128 /project/projectdirs/hacc/PDACS/Coyote/Grid/M001/L180/G001/snapshot_000 8.0 /project/projectdirs/hacc/PDACS/working/test.dat 107.586
