@@ -1,0 +1,4 @@
+
+#include "param.hpp"
+
+void broadcast_param(Param p,int root,MPI_Communicator comm);

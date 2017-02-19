@@ -1,0 +1,19 @@
+To install dtk, you just need to add it to the system's python path;
+
+1. Open ~/.bash.rc
+
+2. Add or modify the PYTHONPATH line by adding the directory containing dtk to the path string, separated by a colon. For example, if dtk was located at
+
+	~/tools/dtk
+
+   and your ./bashrc currently has a line
+
+	export PYTHONPATH="${PYTHONPATH}"
+
+   add the path to dtk like so
+
+	export PYTHONPATH="${PYTHONPATH}:~/tools/"
+
+More information here: http://stackoverflow.com/questions/3402168/permanently-add-a-directory-to-pythonpath
+
+** dtk must be run with python2.x **

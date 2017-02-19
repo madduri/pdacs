@@ -1,0 +1,24 @@
+
+import numpy as np
+
+def conf_interval(x, pdf, conf_level):
+    return np.sum(pdf[pdf > x])-conf_level
+Z2 =H
+import scipy.optimize as opt
+clevs = np.array([0.383,0.68,0.866,0.954,0.997])*np.sum(Z2)
+print clevs
+lvls = []
+for cld in clevs:
+    sig = opt.brentq( conf_interval, 0., np.sum(Z2), args=(Z2,cld) )
+    lvls.append(sig)
+    
+CS = plt.contour(X,Y,Z2,levels=lvls,colors='k')
+
+labels = ['38%', '68%','86.6%','95.4%','99.7%']
+fmt = {}
+
+for l,s in zip( CS.levels, labels ):
+    fmt[l] = s
+
+    # Label every other level using strings
+plt.clabel(CS,CS.levels,inline=True,fmt=fmt,fontsize=10)

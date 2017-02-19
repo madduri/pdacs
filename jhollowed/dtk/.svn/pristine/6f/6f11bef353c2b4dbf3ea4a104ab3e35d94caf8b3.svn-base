@@ -1,0 +1,25 @@
+#ifndef DTK_TIMER_HPP
+#define DTK_TIMER_HPP
+
+#include <sys/time.h>
+#include <string>
+
+namespace dtk{
+  class Timer{
+  public:
+    Timer();
+    virtual ~Timer();
+    void    start();
+    void    stop();
+    double  get_seconds();
+    double  get_mseconds();
+    double  get_useconds();
+    std::string timef();
+  private:
+    struct timeval start_;
+    struct timeval end_;
+
+  };
+}
+
+#endif

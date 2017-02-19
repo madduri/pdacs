@@ -1,0 +1,16 @@
+
+import numpy as np
+import scipy.optimize as opt
+
+def conf_interval_helper(x, pdf, conf_level):
+    return np.sum(pdf[pdf > x])-conf_level
+
+
+def conf_interval(H,clvls):
+    result = np.zeros(clvls.size)
+    clvls = clvls*np.sum(H)
+    for i in range(0,clvls.size):
+        result[i] = opt.brentq(conf_interval_helper,0.,np.sum(H),args=(H,clvls[i]))
+    return result
+    
+
