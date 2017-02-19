@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <set_environment version="1.0">
+        <environment_variable action="set_to" name="SCRIPT_PATH">$REPOSITORY_INSTALL_DIR</environment_variable>
+    </set_environment>
+    <package name="R" version="2.15.0">
+        <repository changeset_revision="6a72f1ba7293" name="package_r_2_15_0" owner="devteam" toolshed="http://toolshed.g2.bx.psu.edu" />
+    </package>
+    <package name="charts_r_packages" version="1.0">
+        <install version="1.0">
+            <actions>
+                <action type="setup_r_environment">
+                    <repository changeset_revision="6c34eaa82fed" name="package_r_2_15_0" owner="devteam" toolshed="http://toolshed.g2.bx.psu.edu">
+                        <package name="R" version="2.15.0" />
+                    </repository>
+                    <package>http://cran.r-project.org/src/contrib/getopt_1.20.0.tar.gz</package>
+                    <package>http://cran.r-project.org/src/contrib/Matrix_1.1-3.tar.gz</package>
+                </action>
+            </actions>
+        </install>
+    </package>
+</tool_dependency>

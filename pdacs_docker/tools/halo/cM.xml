@@ -1,0 +1,53 @@
+<tool id="cm" name="c-M Emulator">
+  <description>Predictor for the concentration-mass relation</description>
+  <command>
+    #if $source.source_select=="Use_Snapshot"
+        ${__root_dir__}/tools/halo/cM-snapshot.sh $source.input $output
+    #else
+        ${__root_dir__}/tools/halo/cM.sh $source.m $source.b $source.ns $source.w $source.s $source.z $output
+    #end if
+</command>
+
+<inputs>
+ <conditional name="source">
+    <param name="source_select" type="select" label="Specify the input">
+        <option value="Use_Snapshot">Use Snapshot</option>
+        <option value="Set_Values">Set Values</option>
+    </param>
+    <when value="Use_Snapshot">
+     <param name="input" type="data" format="dbm" size="100" label="Input Snapshot"/>
+      <sanitizer sanitize="False"/>
+    </when>
+    <when value="Set_Values">
+      <param name="m"  label="Omega_m h^2"  type="float" value="0.1279" min="0.120" max="0.155"/>
+      <param name="b"  label="Omega_b h^2"  type="float" value="0.0232" min="0.0215" max="0.0235"/>
+      <param name="ns" label="n_s"          type="float" value="0.8629" min="0.85" max="1.05"/>
+      <param name="w"  label="w"            type="float" value="-1.184" min="-1.30" max="-0.70"/>
+      <param name="s"  label="sigma_8"      type="float" value="0.6159" min="0.61" max="0.9"/>
+      <param name="z"  label="z"            type="float" value="1.0"    min="0.0" max="1.0"/>
+      <sanitizer sanitize="False"/>
+    </when>
+ </conditional>  
+  </inputs>
+  <outputs>
+    <data format="csv" name="output" />
+  </outputs>
+
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Nonzero return status" />
+  </stdio>
+
+  <help>
+    The c-M emulator allows for fast prediction of the concentration-mass relation for wCDM cosmologies and redshifts between z=0 and z=1. The tool takes 5 cosmological parameters as input and generates a file containing log10(M[Msun]) and halo concentration. The allowed parameter ranges are:
+
+  0.120  Omega_m h^2  0.155
+  0.0215  Omega_b h^2  0.0235
+  0.85  n_s  1.05
+  -1.30  w  -0.70
+  0.61  sigma_8  0.9
+  0  z  1
+
+The c-M emulator is provided by Juliana Kwan and a detailed description of the work can be found in J. Kwan et al., ApJ 768, 123 (2013). The results are based on gravity-only N-body simulations. The original code (written in c) can be downloaded at http://www.hep.anl.gov/cosmology/CosmicEmu/emu.html
+  
+  </help>
+</tool>

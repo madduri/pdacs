@@ -1,0 +1,11 @@
+<tool id="dump_env" name="DumpEnv">
+  <description>Dump the environment variables</description>
+  <command>env  > $out_file1</command>
+  <inputs>  </inputs>
+  <outputs>
+    <data format="input" name="out_file1" />
+  </outputs>
+  <help>
+    Dump the environment variables to the specified file.
+  </help>
+</tool>

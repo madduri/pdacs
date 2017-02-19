@@ -1,0 +1,105 @@
+<tool id="cqt" name="CosmoDB Query Tool" version="1.0.0">
+  <description>for querying SciDB(UNDER DEVELOPMENT)</description>
+  <command interpreter="python">query.py 
+   --array1 "$array:$attribute"
+   #if $operator_cond.operator == "-m":
+     --array2 "$operator_cond.array2:$operator_cond.attribute2"
+     --commands $operator_cond.operator:operator_cond.combine
+   #end if
+   #if $operator_cond.operator == "-a":
+     --commands $operator_cond.operator:$operator_cond.aggregate
+   #end if
+   #if $operator_cond.operator == "-w":
+     --commands $operator_cond.operator:$operator_cond.operator_cond2.winnow
+     #if $operator_cond.operator_cond2.winnow == "filter":
+      --commands $operator_cond.operator:$operator_cond.operator_cond2.winnow:$operator_cond.operator_cond2.expr
+     #end if
+   #end if  	
+   --output $output_file
+   ###set $arr_input = "--array"
+   ###for $i, $s in enumerate($array_files)
+   ## 	$arr_input$i=${s.array}:${s.attribute}
+   ###end for
+  ###> $output_file
+  </command>
+  <requirements>
+    <requirement type="binary" version="1.0">SciDB Shim</requirement>
+    <requirement type="binary" version="SciDB 14.3">scidb</requirement>
+  </requirements>
+  <inputs>
+    <param format="scidb" name="array" type="data" label="Array"/>
+    <param name="attribute" type="text" label="Attribute"/>
+    <conditional name="operator_cond">
+    <param name="operator" type="select" label="Select Query Operator">
+	<option value="-a">Aggregate</option>
+        <option value="-m">Combine</option>
+	<option value="-c">Compute</option>
+	<option value="-r">Rearrange</option>
+	<option value="-w">Winnow</option>
+    </param>
+    <when value="-a">
+    <param name="aggregate" type="select" label="Select Aggregate Operator">
+	<option value="approxdc">Approx Distinct Count</option>
+	<option value="avg">Average</option>
+	<option value="count">Count</option>
+	<option value="max">Max</option>
+	<option value="min">Min</option>
+	<option value="prod">Product</option>
+	<option value="stddev">Stddev</option>
+	<option value="sum">Sum</option>
+	<option value="var">Var</option>
+	<option value="analyze">Analyze</option>
+	<option value="free">Free</option>
+    </param>
+    </when>
+    <when value="-m">
+    <param name="combine" type="select" label="Select Combine Operator">
+	<option value="concat">Concat</option>
+	<option value="cross-join">Cross-Join</option>
+	<option value="join">Join</option>
+	<option value="merge">Merge</option>
+    </param>
+    <param format="scidb" name="array2" type="data" label="Array"/>
+    <param name="attribute2" type="text" label="Attribute"/>    
+    </when>
+    <when value="-c">
+    <param name="compute" type="select" label="Select Compute Operator">
+	<option value="apply">Apply</option>
+	<option value="build">Build</option>
+    </param>
+    </when>
+    <when value="-r">
+    <param name="rearrange" type="select" label="Select Rearrange Operator">
+	<option value="redimension">Redimension</option>
+	<option value="sort">Sort</option>
+    </param>
+    </when>
+    <when value="-w">
+    <conditional name="operator_cond2">
+    <param name="winnow" type="select" label="Select Winnow Operator">
+	<option value="between">Between</option>
+	<option value="filter">Filter</option>
+	<option value="lookup">Lookup</option>
+	<option value="project">Project</option>
+	<option value="subarray">Subarray</option>
+	<option value="slice">Slice</option>
+    </param>
+	<when value="filter">
+	<param name="expr" type="text" label="Expression"/>
+	</when>
+    </conditional>	
+    </when>
+    </conditional>
+   <param name="output_mode" type="select" label="Store Output">
+	<option value="0" selected="True">None</option>
+	<option value="1">In Database</option>
+	<option value="2">As Galaxy File</option>
+   </param>	
+  </inputs>
+  <outputs>
+    <data name="output_file" format="txt" />
+  </outputs>
+  <help>
+
+  </help>
+</tool>

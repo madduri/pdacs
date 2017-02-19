@@ -1,0 +1,77 @@
+<tool id="plott" name="Plotting tool for Multiple datasets" version="0.0.0">
+  <description>Plots different graph types, e.g. line, error bars, points, etc on the same graph using multiple datasets</description>
+  <!--command interpreter="bash">cat.sh $script_file</command-->
+  <command interpreter="Rscript">/global/project/projectdirs/hacc/PDACS/galaxy_dev_ravi/tools/halo/scatterplot.r --output=$output
+    #for $i, $s in enumerate( $series )
+       --formula='{s.input.file_name}${i}[,{s.ycol}]'\~'${s.input.file_name}{{i}[,{s.xcol}]'
+       --table=${s.table_name}
+       ${s.input.file_name}${i}
+    #end for 
+   </command>
+
+  <inputs>
+    <param name="main" type="text" value="" size="30" label="Plot Title"/>
+    <param name="xlab" type="text" value="" size="30" label="Label for x axis"/>
+    <param name="ylab" type="text" value="" size="30" label="Label for y axis"/>
+    <repeat name="series" title="Dataset">
+       <param name="input" type="data" format="db" label="Database File Name"/>
+       <param name="table_name" type="text" label="Tables in the database">
+       </param>
+       <param name="xcol" type="select" data_ref="input" label="Column for x axis">
+ 	 <options>
+           <filter type="data_meta" ref="input" key="column_names"/>
+         </options>
+       </param>
+       <param name="ycol" type="select" data_ref="input" label="Column for y axis">
+          <options>
+            <filter type="data_meta" ref="input" key="column_names"/>
+          </options>
+       </param>
+       <param name="delta" type="select" label="+/- Delta for y axis">
+          <option value="plus" selected="true">+ Delta</option>
+          <option value="minus" selected="false">- Delta</option>
+       </param>
+       <param name="error_type" type="select" label="Error Type">
+          <option value="abs" selected="true">Absolute</option>
+          <option value="frac" selected="false">Fractional</option>
+       </param>
+       <param name="transform_x" type="select" label="Transform(x)">
+          <option value="logX" selected="true">Log</option>
+          <option value="expX" selected="false">Exp</option>
+       </param>
+       <param name="transform_y" type="select" label="Transform(y)">
+          <option value="logY" selected="true">Log</option>
+          <option value="expY" selected="false">Exp</option>
+       </param>
+       <param name="series_type" type="select" label="Plot Type">
+          <option value="line" selected="true">Line</option>
+          <option value="points">Points</option>
+          <option value="errorbar">Error Bars</option>
+       </param>
+    </repeat>       
+  </inputs>
+
+  <configfiles>
+    <configfile name="script_file">
+    suppressPackageStartupMessages(library(optparse))
+    suppressPackageStartupMessages(library(ggplot2))
+    suppressPackageStartupMessages(library(RSQLite))
+    #for $i, $s in enumerate( $series )
+       driver = dbDriver("SQLite")
+       conn = dbConnect(driver, dbname="${s.input.file_name}") 
+       df=dbReadTable(conn, "${s.table_name}", row.names=NULL)
+       pdf(file="out_file1")
+       p=ggplot(df, aes(y=(${s.ycol}), x=(${s.xcol}), guide="legend"))
+       print(p + geom_point())
+       graphics.off()
+   #end for
+    </configfile>
+  </configfiles>
+
+  <outputs>
+    <data format="pdf" name="output" />
+  </outputs>
+
+<help>
+</help>
+</tool>

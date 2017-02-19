@@ -1,0 +1,117 @@
+<tool id="plott" name="Plotting tool for Multiple datasets" version="0.0.0">
+  <description>Plots different graph types, e.g. line, error bars, points, etc on the same graph using multiple datasets</description>
+  <command interpreter="bash">python.sh $script_file</command>
+  <!--command interpreter="Python">$script_file </command-->
+
+  <inputs>
+    <param name="main" type="text" value="" size="30" label="Plot Title"/>
+    <param name="xlab" type="text" value="" size="30" label="Label for x axis"/>
+    <param name="ylab" type="text" value="" size="30" label="Label for y axis"/>
+    <repeat name="series" title="Dataset">
+     <conditional name="format_type">
+       <param name="f_type" type="select" label="Format Type">
+          <option value="cM" selected="true">cM Tool (and similar)</option>
+          <option value="kpk">Cosmic Emu (and similar such as Power Spectrum)</option>
+          <option value="db">Others (such as Mass Functions)</option>
+       </param>
+        <when value = "db">
+         <param name="db_input" type="data" format="db" label="File Name"/>
+         <param name="table_name" type="text" label="Tables in the database">
+         </param>
+         <param name="xcol" type="select" data_ref="db_input" label="Column for x axis">
+ 	  <options>
+           <filter type="data_meta" ref="db_input" key="column_names"/>
+          </options>
+         </param>
+        <param name="ycol" type="select" data_ref="db_input" label="Column for y axis">
+          <options>
+            <filter type="data_meta" ref="db_input" key="column_names"/>
+          </options>
+        </param>
+        </when>
+        <when value="cM">
+         <param name="cm_input" type="data" format="cm" label="File Name"/>
+         <param name="table_name" type="text" label="Tables in the database">
+         </param>
+         <param name="xcol" type="select" data_ref="cm_input" label="Column for x axis">
+ 	  <options>
+           <filter type="data_meta" ref="cm_input" key="column_names"/>
+          </options>
+         </param>
+         <param name="ycol" type="select" data_ref="cm_input" label="Column for y axis">
+          <options>
+            <filter type="data_meta" ref="cm_input" key="column_names"/>
+          </options>
+        </param>
+	</when>
+	<when value="kpk">
+         <param name="kpk_input" type="data" format="kpk" label="File Name"/>
+       <param name="table_name" type="text" label="Tables in the database">
+       </param>
+       <param name="xcol" type="select" data_ref="kpk_input" label="Column for x axis">
+ 	 <options>
+           <filter type="data_meta" ref="kpk_input" key="column_names"/>
+         </options>
+       </param>
+       <param name="ycol" type="select" data_ref="kpk_input" label="Column for y axis">
+          <options>
+            <filter type="data_meta" ref="kpk_input" key="column_names"/>
+          </options>
+       </param>
+	</when>
+     </conditional>
+       <param name="delta" type="select" label="+/- Delta for y axis">
+          <option value="plus" selected="true">+ Delta</option>
+          <option value="minus" selected="false">- Delta</option>
+       </param>
+       <param name="error_type" type="select" label="Error Type">
+          <option value="abs" selected="true">Absolute</option>
+          <option value="frac" selected="false">Fractional</option>
+       </param>
+       <param name="transform_x" type="select" label="Transform(x)">
+          <option value="logX" selected="true">Log</option>
+          <option value="expX" selected="false">Exp</option>
+       </param>
+       <param name="transform_y" type="select" label="Transform(y)">
+          <option value="logY" selected="true">Log</option>
+          <option value="expY" selected="false">Exp</option>
+       </param>
+       <param name="series_type" type="select" label="Plot Type">
+          <option value="line" selected="true">Line</option>
+          <option value="points">Points</option>
+          <option value="errorbar">Error Bars</option>
+       </param>
+    </repeat>       
+  </inputs>
+
+  <configfiles>
+    <configfile name="script_file">
+import sqlite3 as lite
+#for $i, $s in enumerate( $series )
+if ${s.format_type}=="cM":
+  con = lite.connect("${s.cm_input.file_name}")
+if ${s.format_type}=="kpk":
+  con = lite.connect("${s.kpk_input.file_name}")
+if ${s.format_type}=="db":
+  con = lite.connect("${s.db_input.file_name}")
+cur = con.cursor()
+cur.execute("select ${s.xcol} from ${s.table_name}")
+x${i}=cur.fetchall()
+cur.execute("select ${s.ycol} from ${s.table_name}")
+y${i} = cur.fetchall()
+for d in x${i}:
+   print d
+for e in y${i}:
+   print e
+print "Table 1 done"
+#end for
+    </configfile>
+  </configfiles>
+
+  <outputs>
+    <data format="pdf" name="output" />
+  </outputs>
+
+<help>
+</help>
+</tool>

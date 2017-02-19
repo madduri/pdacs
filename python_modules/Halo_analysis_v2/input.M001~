@@ -1,0 +1,45 @@
+# **** input file for HaloPy *****
+# case: what you want to do? 0: FOF MF; 1: SO MF; 2: FOF+SO MF; 3: c-M only (SO MF done by default!); 4: FOF+S//O MF +c-M relation
+0
+# number of mass bins 
+20
+# number of files from halo finder(= # of procs halo finder is run)
+1
+# redshift
+0.0
+# cosmological parameters from input file- model_param.txt? True=1 or False=0
+#if True, then model_no>=0 else set to ignored, if False type values of cosmo params below here
+0
+#model_no , if above True , should >=0, else ignore
+0
+# hubble
+0.5977
+# Omega_m
+0.431
+# ns
+0.9468
+# sigma8
+0.8161
+# w0
+-0.816
+# box size (Mpc/h)
+107.6
+# total number of particles in the simulation
+512
+# minimum number of particles in the halos to be used for the SO MF/c-M relation
+1000
+# overdensity used to run SO halo finder
+200.0
+#halo file directory
+/global/project/projectdirs/hacc/PDACS/Halo_analysis_v2
+# base halo file name
+halo_m001.gadget
+# transfer function file name (expect transfer function from camb output)
+/global/project/projectdirs/hacc/PDACS/Coyote/Grid/M001/L180/G001/cambM001.tf
+# whats the type name of fof properties files
+fofproperties
+# whats the type name of sod properties files
+sodproperties
+# whats the type name of sod profile files
+sodpropertybins
+

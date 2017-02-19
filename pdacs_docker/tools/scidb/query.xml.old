@@ -1,0 +1,84 @@
+<tool id="cqt" name="CosmoDB Query Tool" version="1.0.0">
+  <description>for querying SciDB</description>
+  <command interpreter="python">query.py 
+   #set $arr_input = "--array"
+   #for $i, $s in enumerate($array_files)
+   	$arr_input$i=${s.array}:${s.attribute}
+   #end for
+  </command>
+  <requirements>
+    <requirement type="binary" version="1.0">SciDB Shim</requirement>
+    <requirement type="binary" version="SciDB 14.3">scidb</requirement>
+  </requirements>
+  <inputs>
+    <repeat name="array_files" title="SciDB Array" min="1" max="3">
+    <param format="scidb" name="array" type="data" label="Array"/>
+    <param name="attribute" type="text" label="Attribute"/>
+    </repeat>
+    <conditional name="operator_cond">
+    <param name="operator" type="select" label="Select Query Operator">
+	<option value="-a">Aggregate</option>
+        <option value="-d">Combine</option>
+	<option value="-c">Compute</option>
+	<option value="-r">Rearrange</option>
+	<option value="-w">Winnow</option>
+    </param>
+    <when value="-a">
+    <param name="aggregate" type="select" label="Select Aggregate Operator">
+	<option value="1">Approx Distinct Count</option>
+	<option value="2">Average</option>
+	<option value="3">Count</option>
+	<option value="4">Max</option>
+	<option value="5">Min</option>
+	<option value="6">Product</option>
+	<option value="7">Stddev</option>
+	<option value="8">Sum</option>
+	<option value="9">Var</option>
+	<option value="10">Analyze</option>
+	<option value="11">Free</option>
+    </param>
+    </when>
+    <when value="-d">
+    <param name="combine" type="select" label="Select Combine Operator">
+	<option value="1">Concat</option>
+	<option value="2">Cross-Join</option>
+	<option value="3">Join</option>
+	<option value="4">Merge</option>
+    </param>
+    </when>
+    <when value="-c">
+    <param name="compute" type="select" label="Select Compute Operator">
+	<option value="1">Apply</option>
+	<option value="2">Build</option>
+    </param>
+    </when>
+    <when value="-r">
+    <param name="rearrange" type="select" label="Select Rearrange Operator">
+	<option value="1">Redimension</option>
+	<option value="2">Sort</option>
+    </param>
+    </when>
+    <when value="-w">
+    <param name="winnow" type="select" label="Select Winnow Operator">
+	<option value="1">Between</option>
+	<option value="2">Filter</option>
+	<option value="2">Lookup</option>
+	<option value="2">Project</option>
+	<option value="2">Subarray</option>
+	<option value="2">Slice</option>
+    </param>
+    </when>
+    </conditional>
+   <param name="output" type="select" label="Store Output">
+	<option value="0" selected="True">None</option>
+	<option value="1">In Database</option>
+	<option value="2">As Galaxy File</option>
+   </param>	
+  </inputs>
+  <outputs>
+    <data name="output_file" format="png" />
+  </outputs>
+  <help>
+
+  </help>
+</tool>

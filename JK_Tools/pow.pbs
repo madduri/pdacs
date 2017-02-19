@@ -1,0 +1,19 @@
+
+#PBS -q debug
+#PBS -A hacc
+#PBS -l nodes=2:ppn=8
+#PBS -l walltime=00:15:00
+#PBS -N pow
+#PBS -e pow.$PBS_JOBID.err
+#PBS -o pow.$PBS.JOBID.out
+#PBS -V
+    
+module unload pgi
+module load gcc
+module load fftw
+module load gsl   
+module load sqlite
+ 
+cd /project/projectdirs/hacc/PDACS/JK_Tools/
+
+mpirun -n 16 ./powerspec.out 128 /project/projectdirs/hacc/PDACS/Coyote/Grid/M002/L180/G001/snapshot_0.4000 8.0 /project/projectdirs/hacc/PDACS/pdacs-test/database/files/002/dataset_2131.dat 107.46

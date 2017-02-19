@@ -1,0 +1,102 @@
+<tool id="XY_Plot_1" name="Plotting tool" version="0.0.1">
+  <description>for multiple series and graph types</description>
+  <command interpreter="bash">r_wrapper.sh $script_file</command>
+
+  <inputs>
+    <param name="main" type="text" value="" size="30" label="Plot Title"/>
+    <param name="xlab" type="text" value="" size="30" label="Label for x axis"/>
+    <param name="ylab" type="text" value="" size="30" label="Label for y axis"/>
+    <repeat name="series" title="Series">
+      <param name="input" type="data" format="csv" label="Dataset"/>
+      <param name="xcol" type="data_column" data_ref="input" label="Column for x axis"/>
+      <param name="ycol" type="data_column" data_ref="input" label="Column for y axis"/>
+      <param name="xmin" type="integer" value="0" label="X min value"/>
+      <param name="xmax" type="integer" value="0" label="X max value"/>
+      <param name="ymin" type="integer" value="0" label="Y min value"/>
+      <param name="ymax" type="integer" value="0" label="Y max value"/>
+      <param name="func" type="select" label="Transformation Function">
+            <option value="">none</option>
+            <option value="log">log</option>
+            <option value="exp">exp</option>
+          </param>
+      <param name="errorbar"  type="boolean"  truevalue="0"  falsevalue="1" label="Plot error bars"  checked="true"/> 
+   </repeat>       
+  </inputs>
+
+  <configfiles>
+    <configfile name="script_file">
+      ## Setup R error handling to go to stderr
+      options( show.error.messages=F, 
+               error = function () { cat( geterrmessage(), file=stderr() ); q( "no", 1, F ) } )
+      library(ggplot2)
+      pdf( "${out_file1}" )
+      a=ggplot()+ xlab("${xlab}") + ylab("${ylab}") + ggtitle("${main}") + theme(panel.background = element_blank(), panel.border = element_blank(), axis.line = element_line(colour = "black"))
+      #for $i, $s in enumerate( $series )
+          s${i} = read.csv( "${s.input.file_name}", sep="\t", comment.char = "#")
+          x${i} = ${s.func}(s${i}[,${s.xcol}])         
+          y${i} = ${s.func}(s${i}[,${s.ycol}])
+          a=(a+geom_line(data=s${i}, aes(x=x${i},y=y${i}, colour="s${i}", group="s${i}")) +geom_point(data=s${i}, aes(x=x${i},y=y${i}, colour="s${i}", group="s${i}")))
+          ## print(ncol(s${i}))
+          if ((${s.errorbar} == 0)) if (ncol(s${i}) > 3) a=(a+geom_errorbar(data=s${i},aes(x=x${i},y=y${i},ymin=y${i}-y${i}*s${i}[,4],ymax=y${i}+y${i}*s${i}[,4],colour="s${i}", group="s${i}")))
+      #end for 
+      print(a + xlim(${s.xmin}, ${s.xmax}) + ylim(${s.ymin}, ${s.ymax}))
+      ## Close the PDF file
+      devname = dev.off() 
+    </configfile>
+  </configfiles>
+
+  <outputs>
+    <data format="pdf" name="out_file1"/>
+  </outputs>
+
+    <tests>
+        <test>
+            <param name="main" value="Example XY Plot"/>
+            <param name="xlab" value="Column 1"/>
+            <param name="ylab" value="Column 2"/>
+            <param name="input" value="2.tabular" ftype="tabular"/>
+            <param name="xcol" value="1"/>
+            <param name="ycol" value="2"/>
+            <param name="type" value="line"/>
+            <param name="lty" value="2"/>
+            <param name="col" value="2"/>
+            <param name="lwd" value="1.0"/>
+            <output name="out_file1" file="XY_Plot_1_out.pdf"/>
+        </test>
+    </tests>
+<help>
+.. class:: infomark
+
+This tool allows you to plot values contained in columns of a dataset against each other and also allows you to have different series corresponding to the same or different datasets in one plot.
+
+-----
+
+.. class:: warningmark
+
+This tool throws an error if the columns selected for plotting are absent or are not numeric and also if the lengths of these columns differ.
+
+-----
+
+**Example**
+
+Input file::
+
+    1   68  4.1
+    2   71  4.6
+    3   62  3.8
+    4   75  4.4
+    5   58  3.2
+    6   60  3.1
+    7   67  3.8
+    8   68  4.1
+    9   71  4.3
+    10  69  3.7 
+
+Create a two series XY plot on the above data
+
+- Series 1: Red Dashed-Line plot between columns 1 and 2
+- Series 2: Blue Circular-Point plot between columns 3 and 2 
+
+.. image:: ${static_path}/images/xy_example.jpg
+</help>
+</tool>

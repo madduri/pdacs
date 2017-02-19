@@ -1,0 +1,20 @@
+<tool id="mf" name="FOF Mass Function">
+  <description>Measure FOF mass function on FOF halo dataset</description>
+  <command>
+     ${__root_dir__}/tools/halo/mf.sh 1 $m $f $o ${__root_dir__} 
+ </command>
+  <inputs>
+    <param name="m" type="integer" label="Number of Mass Bins" value="20"/>    
+    <param name="f" type="data" format="dbi" size="100" label="Input Snapshot" help="This file contains additional metadata after running the HaloFinder"/>
+      <sanitizer sanitize="False"/>
+  </inputs>
+  <outputs>
+    <data name="o" type="data" format="csv" label="FOF Mass Function on ${f.name}"/>
+  </outputs>
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Nonzero return status" />
+  </stdio>
+  <help>
+    FOF Mass Function tool reads output of halo finder tools, calculates mass function and generates data for plotting tools. 
+  </help>
+</tool>

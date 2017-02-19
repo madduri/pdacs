@@ -1,0 +1,20 @@
+<tool id="sod_mf" name="SO Mass Function">
+ <description>Measure SO mass function on SO halo dataset</description>
+  <command>
+    ${__root_dir__}/tools/halo/mf.sh 2 $m $f $o ${__root_dir__}
+  </command>
+  <inputs>
+    <param name="m" type="integer" label="Number of Mass Bins" value="20"/>
+    <param name="f" type="data" format="dbi" size="300" label="Input Snapshot"/>
+      <sanitizer sanitize="False"/>
+  </inputs>
+  <outputs>
+    <data name="o" type="data" format="csv" label="SOD Mass Function on ${f.name}"/>
+  </outputs>
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Nonzero return status" />
+  </stdio>
+  <help>
+    SOD Mass function tool reads output of halo finder tools, for example SoDProperties file, calculates mass function and generates data for plotting tools (with error bars?).
+  </help>
+</tool>

@@ -1,0 +1,562 @@
+<tool id="camb" name="CAMB"  version="1.0.0">
+  <description>Code for Anisotropies in the Microwave Background</description>
+  <command>
+    cp /global/project/projectdirs/hacc/PDACS/CAMB/HighLExtrapTemplate_lenspotentialCls.dat .; /project/projectdirs/hacc/PDACS/CAMB/camb $params_ini_file
+  </command>
+  <inputs>
+    <conditional name="source">
+      <param name="source_select" type="select" label="Specify the input">
+        <option value="Use_Snapshot">Use Snapshot</option>
+        <option value="Set_Values">Set Values</option>
+      </param>
+    <when value="Use_Snapshot">
+     <param name="inputfile" type="data" format="dbm" size="100" label="Input Snapshot"/>
+      <sanitizer sanitize="False"/>
+    </when>
+    <when value="Set_Values">
+      <param name="linear" type="select" label="Linear or Non-linear">
+        <option value="0" selected="true">Linear</option>
+        <option value="1">Non-linear Matter Power (HALOFIT)</option>
+        <option value="2">Non-linear CMB Lensing (HALOFIT)</option>
+      </param>
+      <conditional name="physical_cond">
+        <param name="physical" type="select" label="Use Physical Parameters" help="If use_phyical set phyiscal densities in baryone, CDM and neutrinos + Omega_k">
+          <option value="T" selected="True">Yes</option>
+          <option value="F">No</option>
+        </param>
+        <when value="T">
+          <param name="ombh2" type="float" label="ombh2" value="0.01"/> 
+          <param name="omch2" type="float" label="omch2" value="0.08"/>
+          <param name="omnuh2" type="float" label="omnuh2" value="0"/>
+          <param name="omk" type="float" label="omk" value="0"/>
+        </when>
+        <when value="F">
+          <param name="omega_baryon" type="float" label="omega_baryon" value="0.0462"/>
+          <param name="omega_cdm" type="float" label="omega_cdm" value="0.2538"/>
+          <param name="omega_lambda" type="float" label="omega_lambda" value="0.7"/>
+          <param name="omega_neutrino" type="float" label="omega_neutrino" value="0"/>
+          <param name="nu_mass_eigenstates" type="integer" label="Neutrino Mass Splittings: Number Eigenstates" help="" value="1"/>
+          <param name="nu_mass_degeneracies" type="integer" label="Neutrino Mass Splittings: Degeneracies" help="sets nu_mass_degeneracies = massive_neutrinos. Otherwise should be an array. e.g. for 3 neutrinos with 2 non-degenerate eigenstates, nu_mass_degeneracies = 2 1" value="0"/>
+          <param name="nu_mass_fractions" type="integer" label="Neutrino Mass Splittings: Mass Fractions" help="Fraction of total omega_nu h^2 accounted for by each eigenstate, eg. 0.5 0.5" value="1"/>
+        </when>
+      </conditional>
+      <param name="hubble" type="integer" label="Hubble parameter" value="65"/>
+      <param name="w" type="float" label="w" value="-1.2"/>
+      <param name="wprimed" type="float" label="wprimed" value="0"/>
+      <param label="Massless Neutrinos" type="float" name="massless_neutrinos" value="3.046" help="the effective number (for QED + non-instantaneous decoupling) fractional part of the number is used to increase the neutrino temperature, e.g. 2.99 correponds to 2 neutrinos with a much higher temperature, 3.04 correponds to 3 neutrinos with a slightly higher temperature. 3.046 is consistent with CosmoMC."/>
+      <param label="Massive Neutrinos" type="float" name="massive_neutrinos" value="0"/>
+      <param name="scalar_amp" type="float" label="Scalar Amplitude" value="2.1e-9"/>
+      <param name="scalar_spectral_index" type="float" label="Scalar Spectral Index" value="0.94"/>
+      <param name="scalar_nrun" type="float" label="Scalar spectral index running" value="0"/>
+      <param name="tensor_spectral_index" type="integer" label="Tensor spectral index " value="0"/>
+      <conditional name="reionization_cond">
+        <param name="reionization" type="select" label="Include Reionization">
+          <option value="T">Yes</option>
+          <option value="F" selected="True">No</option>
+        </param>
+        <when value="F"></when>
+        <when value="T">
+          <conditional name="optical_depth_cond">
+            <param name="re_use_optical_depth" type="select" label="Use Optical Depth">
+              <option value="T" selected="True">Yes</option>
+              <option value="F">No</option>
+            </param>
+            <when value="T">
+              <param name="optical_depth" type="float" label="Optical Depth" value="0.09"/>
+            </when>
+            <when value="F">
+              <param name="re_redshift" type="integer" label="Redshift" value="11"/>
+              <param name="re_delta_redshift" type="float" label="Width of Transition" value="1.5"/>
+              <param name="re_ionization_frac" type="float" label="Ionization fraction" value="-1"/>
+            </when>
+          </conditional>
+        </when>
+      </conditional>
+      <conditional name="params">
+        <param name="source_select" type="select" label="CAMB settings to use" help="For most mapping needs use Commonly Used settings. If you want full control use Full Parameter List">
+          <option value="pre_set">Commonly Used</option>
+          <option value="full">Full Parameter List</option>
+        </param>
+        <when value="pre_set" ></when>
+        <when value="full">
+          <param name="scalar_cls" type="select" label="Get Scalar CLS" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <param name="vector_cls" type="select" label="Get Vector CLS" help="">
+            <option value="T">Yes</option>
+            <option value="F" selected="True">No</option>
+          </param>
+          <param name="tensor_cls" type="select" label="Get Tensor CLS" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <param name="transfer_cls" type="select" label="Get Transfer CLS" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <param name="do_lensing" type="select" label="Get Lensing" help="if do_lensing then scalar_output_file contains additional columns.">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+  
+          <param name="l_max_scalar" type="integer" value="2200" label="L max scalar" help=""/>
+          <param name="k_eta_max_scalar" type="integer" value="4000" label="K eta max scalar" help=""/>
+          <param name="l_max_tensor" type="integer" value="1500" label="L max tensor" help="Tensor settings should be less than or equal to the above"/>
+          <param name="k_eta_max_tensor" type="integer" value="3000" label="K eta max tensor" help=""/>
+
+          <param name="cs2_lam" type="float" value="1" label="Comoving Sound Speed of the dark energy (cs2_lam)" help="1=quintessence"/>
+          <param name="temp_cmb" type="float" value="2.726" label="Temp cmb" help="" />
+          <param name="helium_fraction" type="float" value="0.24" label="Helium Fraction" help="" />
+    
+          <param name="initial_power_num" type="integer" value="1" label="Power Spectrum Number" help="" />
+          <param name="pivot_scalar" type="float" value="0.05" label="Scalar Pivot" help="" />
+          <param name="pivot_tensor" type="float" value="0.05" label="Tensor Pivot" help="" />
+          <param name="initial_ratio" type="float" value="1" label="Initial Ratio" help="Ratio is that of the initial tens/scal power spectrum amplitudes." />
+
+          <param name="RECFAST_fudge" type="float" value="1.14" label="RECFAST fudge" help="" />
+          <param name="RECFAST_fudge_He" type="float" value="0.86" label="RECFAST He" help="" />
+          <param name="RECFAST_Heswitch" type="integer" value="6" label="RECFAST He Switch" help="" />
+          <param name="RECFAST_Hswitch" type="select" label="RECFAST H Switch" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+  
+          <param name="initial_condition" type="select" label="Initial Scalar Perturbation Mode" help="initial_condition">
+            <option value="1" selected="True">Adiabatic</option>
+            <option value="2">CDM isocurvature</option>
+            <option value="3">Baryon isocurvature</option>
+            <option value="4">Neutrino density isocurvature</option>
+            <option value="5">Neutrino velocity isocurvature</option>
+          </param>
+          <param name="initial_vector" type="text" value="-1 0 0 0 0" label="Initial vector" help="If above is zero, use modes in the following (totally correlated) proportions. Note: we assume all modes have the same initial power spectrum" />
+          <param name="vector_mode" type="select" label="For Vector Modes" help="vector_mode">
+            <option value="0" selected="True">Regular (Neutrino Vorticity Mode)</option>
+            <option value="1">Magnetic (Neutrino Vorticity Mode)</option>
+          </param>
+  
+          <param name="COBE_normalize" type="select" label="Use the COBE Normalization" help="">
+            <option value="T">Yes</option>
+            <option value="F" selected="True">No</option>
+          </param>
+          <param name="CMB_outputscale" type="float" value="7.4311e12" label="CMB Output Scale" help="To get MuK^2 set realistic initial amplitude (e.g. scalar_amp(1) = 2.3e-9 above) and otherwise for dimensionless transfer functions set scalar_amp(1)=1 and use CMB_outputscale = 1" />
+  
+          <param name="transfer_high_precision" type="select" label="Transfer High Precision" help="">
+            <option value="T">Yes</option>
+            <option value="F" selected="True">No</option>
+          </param>
+          <param name="transfer_interp_matterpower" type="select" label="Matter/Power" help="">
+            <option value="T" selected="True">Interpolated Grid</option>
+            <option value="F">Calculated Values</option>
+          </param>
+          <param name="transfer_kmax" type="float" value="2" label="Transfer Kmax"/>
+          <param name="transfer_k_per_logint" type="float" value="0" label="Transfer K per logint"/>
+          <param name="transfer_num_redshifts" type="integer" value="0" label="Number of Redshifts"/>
+  
+          <conditional name="bispectrum_params_cond">
+            <param name="do_bispectrum" type="select" label="Do Lensing or Primordial Bispectrum" help="">
+              <option value="F" selected="True">No</option>
+              <option value="lensing">Do Lensing</option>
+              <option value="primordial">Do Primordial</option>
+            </param>
+            <when value="F"></when>
+            <when value="lensing">
+              <param name="bispectrum_nfields" type="integer" value="1" label="Number of fields"/>
+              <param name="bispectrum_slice_base_L" type="integer" value="0" label="Slice Base L" help="set slice non-zero to output slice b_{bispectrum_slice_base_L L L+delta}"/>
+              <param name="bispectrum_ndelta" type="integer" value="3" label="Number of Deltas"/>
+              <param name="bispectrum_delta" type="text" value="0 2 4" label="Deltas"/>
+              <conditional name="fisher_cond">
+                <param name="bispectrum_do_fisher" type="select" label="Do Fisher bispectrum" help="Estimates errors and correlations between bispectra. Note you need to compile with LAPACK and FISHER defined to use get the Fisher info.">
+                  <option value="T">Yes</option>
+                  <option value="F" selected="True">No</option>
+                </param>
+                <when value="F"></when>
+                <when value="T">
+                  <param name="bispectrum_fisher_noise" type="float" value="0" label="Fisher Noise"/>
+                  <param name="bispectrum_fisher_noise_pol" type="float" value="0" label="Fisher Noise Pol"/>
+                  <param name="bispectrum_fisher_fwhm_arcmin" type="float" value="7" label="Fisher fwhm arcmin"/>
+                </when>
+              </conditional>
+              <param name="bispectrum_full_output_sparse" type="select" label="Create Sparse Output" help="">
+                <option value="T">Yes</option>
+                <option value="F" selected="True">No</option>
+              </param>
+              <param name="bispectrum_export_alpha_beta" type="select" label="Export alpha and beta" help="">
+                <option value="T">Yes</option>
+                <option value="F" selected="True">No</option>
+              </param>
+            </when>
+            <when value="primordial">
+              <param name="bispectrum_nfields" type="integer" value="1" label="Number of fields"/>
+              <param name="bispectrum_slice_base_L" type="integer" value="0" label="Slice Base L" help="set slice non-zero to output slice b_{bispectrum_slice_base_L L L+delta}"/>
+              <param name="bispectrum_ndelta" type="integer" value="3" label="Number of Deltas"/>
+              <param name="bispectrum_delta" type="text" value="0 2 4" label="Deltas"/>
+              <conditional name="fisher_cond">
+                <param name="bispectrum_do_fisher" type="select" label="Do Fisher bispectrum" help="Estimates errors and correlations between bispectra. Note you need to compile with LAPACK and FISHER defined to use get the Fisher info.">
+                  <option value="T">Yes</option>
+                  <option value="F" selected="True">No</option>
+                </param>
+                <when value="F"></when>
+                <when value="T">
+                  <param name="bispectrum_fisher_noise" type="float" value="0" label="Fisher Noise"/>
+                  <param name="bispectrum_fisher_noise_pol" type="float" value="0" label="Fisher Noise Pol"/>
+                  <param name="bispectrum_fisher_fwhm_arcmin" type="float" value="7" label="Fisher fwhm arcmin"/>
+                </when>
+              </conditional>
+              <param name="bispectrum_full_output_sparse" type="select" label="Create Sparse Output" help="">
+                <option value="T">Yes</option>
+                <option value="F" selected="True">No</option>
+              </param>
+              <param name="bispectrum_export_alpha_beta" type="select" label="Export alpha and beta" help="">
+                <option value="T">Yes</option>
+                <option value="F" selected="True">No</option>
+              </param>
+            </when>
+          </conditional>
+
+          <param name="feedback_level" type="select" label="Feedback level" help="If feedback_level > 0 print out useful information computed about the model">
+            <option value="0">None</option>
+            <option value="1" selected="True">Print</option>
+          </param>
+          <param name="lensing_method" type="select" label="Lensing Method" help="">
+            <option value="1" selected="True">Curved correlation function</option>
+            <option value="2">Flat correlation function</option>
+            <option value="3">Inaccurate harmonic method</option>
+          </param>
+          <param name="accurate_BB" type="select" label="Accurate BB" help="">
+            <option value="T">Yes</option>
+            <option value="F" selected="True">No</option>
+          </param>
+          <param name="massive_nu_approx" type="select" label="Massive Neutrino Approx" help="">
+            <option value="1" selected="True">Integrate distribution function</option>
+            <option value="2">Series in velocity weight</option>
+          </param>
+          <param name="accurate_polarization" type="select" label="Accurate Polarization" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <param name="accurate_reionization" type="select" label="Accurate reionization" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <param name="do_tensor_neutrinos" type="select" label="Tensor Neutrinos" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <param name="do_late_rad_truncation" type="select" label="Truncate late radiation hierarchies" help="">
+            <option value="T" selected="True">Yes</option>
+            <option value="F">No</option>
+          </param>
+          <conditional name="accuracy_default_cond">
+            <param name="high_accuracy_default" type="select" label="Use High Accuracy Default">
+              <option value="T" selected="True">Yes</option>
+              <option value="F">No</option>
+            </param>
+            <when value="T"></when>
+            <when value="F">
+              <param name="accuracy_boost" type="integer" value="3" label="Accuracy Boost"/>
+              <param name="l_accuracy_boost" type="integer" value="1" label="L Accuracy Boost"/>
+              <param name="l_sample_boost" type="integer" value="1" label="L Sample Boost"/>
+            </when>
+          </conditional>
+        </when>
+      </conditional>
+    </when>
+    </conditional>
+  </inputs>
+
+  <outputs>
+    <!--data format="binary" type="data" name="haloCatalogFile" label="Halo Catalog" />
+    <data format="binary" type="data" name="particlesFile" label="Big Halo Particles"/-->
+    <data format="csv" name="transfer_filename" label="CAMB Transfer_out" from_work_dir="camb_transfer_out.dat"/>
+    <data format="csv" name="transfer_matterpower" label="CAMB Transfer_matterpower" from_work_dir="camb_matterpower.dat"/>
+    <data format="csv" name="scalar_output_file" label="CAMB Scalar output file" from_work_dir="camb_scalCls.dat"/>
+    <data format="csv" name="vector_output_file" label="CAMB Vector output file" from_work_dir="camb_vecCls.dat"/>
+    <data format="csv" name="tensor_output_file" label="CAMB tensor output file" from_work_dir="camb_tensCls.dat"/>
+    <data format="csv" name="total_output_file" label="CAMB total output file" from_work_dir="camb_totCls.dat"/>
+    <data format="csv" name="lensed_output_file" label="CAMB lensed output file" from_work_dir="camb_lensedCls.dat"/>
+    <data format="csv" name="lensed_total_output_file" label="CAMB lensed total output file" from_work_dir="camb_lensedtotCls.dat"/>
+    <data format="csv" name="lens_potential_output_file" label="CAMB lens potential output file" from_work_dir="camb_lenspotentialCls.dat"/>
+    <data format="csv" name="FITS_filename" label="CAMB " from_work_dir="camb_scalCls.fits"/>
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.csv"/>
+    </test>
+  </tests>
+
+  <configfiles>
+    <configfile name="params_ini_file">
+output_root = camb
+
+#if str($source.source_select) == "Use_Snapshot"
+#import sqlite3 as lite
+#set $con = $lite.connect(str($inputfile))
+#set $cur = $con.cursor()
+#$cur.execute("select value from metadata where name='Snapshot'")
+#$con.commit()
+#set global $row = $cur.fetchone()
+#set $snapshotname = $row[0]
+
+#$cur.execute("select value from metadata where name='Omega_bar'")
+#$con.commit()
+#set $row = cur.fetchone()
+#set $omega_b = float(row[0])
+
+#$cur.execute("select value from metadata where name='Omega_m'")
+#$con.commit()
+#set $row = cur.fetchone()
+#set $omegaDM = float(row[0])
+
+#$cur.execute("select value from metadata where name='hubble'")
+#$con.commit()
+#set $row = cur.fetchone()
+#set $hubbleConst = float(row[0])
+
+#$cur.execute("select value from metadata where name='Omega_nu'")
+#$con.commit()
+#set $row = cur.fetchone()
+#set $omega_nu = float(row[0])
+
+#$cur.execute("select value from metadata where name='w_de'")
+#$con.commit()
+#set $row = cur.fetchone()
+#set $w_de = float(row[0])
+
+#$cur.execute("select value from metadata where name='n_s'")
+#$con.commit()
+#set $row = cur.fetchone()
+#set $ns = float(row[0])
+
+
+do_nonlinear = 0 
+#set $ombh2_var = $omega_b * $hubbleConst * $hubbleConst
+ombh2 =  $ombh2_var
+#set $omch2_var = ($omegaDM - $omega_b ) * $hubbleConst * $hubbleConst
+omch2 = $omch2_var
+#set $omnuh2_var = $omega_nu * $hubbleConst * $hubbleConst
+omnuh2 = $omnuh2_var
+omk = 0
+hubble = $hubbleConst
+w = $w_de
+wprimed = -0
+#if $omega_nu != 0:
+massless_neutrinos = 3.046
+massive_neutrinos = 0
+#else
+massless_neutrinos = 0
+massive_neutrinos = 3.046
+#end if
+
+scalar_amp(1) = 2.1e-9
+scalar_spectral_index(1) = $ns
+scalar_nrun(1) = 0
+tensor_spectral_index(1) = 0
+re_use_optical_depth = T
+re_optical_depth = 0.09
+
+#else 
+
+hubble = $source.hubble
+w = $source.w
+wprimed = $source.wprimed
+massless_neutrinos = $source.massless_neutrinos
+massive_neutrinos = $source.massive_neutrinos
+scalar_amp(1) = $source.scalar_amp
+scalar_spectral_index(1) = $source.scalar_spectral_index
+scalar_nrun(1) = $source.scalar_nrun
+tensor_spectral_index(1) = $source.tensor_spectral_index)
+
+#if str($source.physical_cond.physical) == "T"
+use_physical = T
+ombh2 = $source.physical_cond.ombh2
+omch2 = $source.physical_cond.omch2
+omnuh2 = $source.physical_cond.omnuh2
+omk = $source.physical_cond.omk
+
+#else
+use_physical_val = F
+omega_baryon = $source.physical_cond.omega_baryon
+omega_cdm = $source.physical_cond.omega_cdm
+omega_lambda = $source.physical_cond.omega_lambda
+omega_neutrino = $source.physical_cond.omega_neutrino
+nu_mass_eigenstates = $source.physical_cond.nu_mass_eigenstates
+nu_mass_degeneracies = $source.physical_cond.nu_mass_degeneracies
+nu_mass_fractions = $source.physical_cond.nu_mass_fractions
+#end if
+
+#if str($source.reionization_cond.reionization) == "T"
+reionization = T
+  #if str($source.reionization_cond.optical_depth_cond.re_use_optical_depth) == "T"
+re_use_optical_depth = T
+re_optical_depth = $source.reionization_cond.optical_depth_cond.optical_depth
+  #else
+re_use_optical_depth = F
+re_redshift = $source.reionization_cond.optical_depth_cond.re_redshift
+re_delta_redshift = $source.reionization_cond.optical_depth_cond.re_delta_redshift
+re_ionization_frac = $source.reionization_cond.optical_depth_cond.re_ionization_frac
+  #end if
+#else
+reionization = F
+#end if
+
+#if str($source.params.source_select) == "full"
+get_scalar_cls = $source.params.scalar_cls
+get_vector_cls = $source.params.vector_cls
+get_tensor_cls = $source.params.tensor_cls
+get_transfer = $source.params.transfer_cls
+do_lensing = $source.params.do_lensing
+l_max_scalar = $source.params.l_max_scalar
+k_eta_max_scalar = $source.params.k_eta_max_scalar
+l_max_tensor = $source.params.l_max_tensor
+k_eta_max_tensor = $source.params.k_eta_max_tensor 
+cs2_lam = $source.params.cs2_lam
+temp_cmb = $source.params.temp_cmb 
+helium_fraction = $source.params.helium_fraction
+initial_power_num = $source.params.initial_power_num
+pivot_scalar = $source.params.pivot_scalar 
+pivot_tensor = $source.params.pivot_tensor
+initial_ratio(1) = $source.params.initial_ratio
+RECFAST_fudge = $source.params.RECFAST_fudge 
+RECFAST_fudge_He = $source.params.RECFAST_fudge_He 
+RECFAST_Heswitch = $source.params.RECFAST_Heswitch
+RECFAST_Hswitch = $source.params.RECFAST_Hswitch 
+initial_condition = $source.params.initial_condition 
+initial_vector = $source.params.initial_vector 
+vector_mode = $source.params.vector_mode
+COBE_normalize = $source.params.COBE_normalize
+CMB_outputscale = $source.params.CMB_outputscale
+transfer_high_precision = $source.params.transfer_high_precision
+transfer_kmax = $source.params.transfer_kmax
+transfer_k_per_logint = $source.params.transfer_k_per_logint
+transfer_num_redshifts = $source.params.transfer_num_redshifts
+transfer_interp_matterpower = $source.params.transfer_interp_matterpower
+transfer_redshift(1) = 0
+  #if str($source.params.bispectrum_params_cond.do_bispectrum) == "lensing"
+do_lensing_bispectrum = T
+do_primordial_bispectrum = F
+bispectrum_nfields = $source.params.bispectrum_params_cond.bispectrum_nfields
+bispectrum_slice_base_L = $source.params.bispectrum_params_cond.bispectrum_slice_base_L
+bispectrum_ndelta = $source.params.bispectrum_params_cond.bispectrum_ndelta
+bispectrum_delta = $source.params.bispectrum_params_cond.bispectrum_delta
+bispectrum_do_fisher = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_do_fisher
+    #if str($source.params.bispectrum_params_cond.fisher_cond.bispectrum_do_fisher) == "T"
+bispectrum_fisher_noise = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_fisher_noise
+bispectrum_fisher_noise_pol = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_fisher_noise_pol
+bispectrum_fisher_fwhm_arcmin = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_fisher_fwhm_arcmin
+    #end if
+bispectrum_full_output_sparse = $source.params.bispectrum_params_cond.bispectrum_full_output_sparse
+bispectrum_export_alpha_beta = $source.params.bispectrum_params_cond.bispectrum_export_alpha_beta
+  #end if
+  #if str($source.params.bispectrum_params_cond.do_bispectrum) == "primordial"
+do_lensing_bispectrum = F
+do_primordial_bispectrum = T
+bispectrum_nfields = $source.params.bispectrum_params_cond.bispectrum_nfields
+bispectrum_slice_base_L = $source.params.bispectrum_params_cond.bispectrum_slice_base_L
+bispectrum_ndelta = $source.params.bispectrum_params_cond.bispectrum_ndelta
+bispectrum_delta = $source.params.bispectrum_params_cond.bispectrum_delta
+bispectrum_do_fisher = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_do_fisher
+    #if str($source.params.bispectrum_params_cond.fisher_cond.bispectrum_do_fisher) == "T"
+bispectrum_fisher_noise = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_fisher_noise
+bispectrum_fisher_noise_pol = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_fisher_noise_pol
+bispectrum_fisher_fwhm_arcmin = $source.params.bispectrum_params_cond.fisher_cond.bispectrum_fisher_fwhm_arcmin
+    #end if
+bispectrum_full_output_sparse = $source.params.bispectrum_params_cond.bispectrum_full_output_sparse
+bispectrum_export_alpha_beta = $source.params.bispectrum_params_cond.bispectrum_export_alpha_beta
+  #end if
+feedback_level = $source.params.feedback_level
+lensing_method = $source.params.lensing_method
+accurate_BB = $source.params.accurate_BB
+massive_nu_approx = $source.params.massive_nu_approx
+accurate_polarization = $source.params.accurate_polarization
+accurate_reionization = $source.params.accurate_reionization
+do_tensor_neutrinos = $source.params.do_tensor_neutrinos
+do_late_rad_truncation = $source.params.do_late_rad_truncation
+high_accuracy_default = $source.params.accuracy_default_cond.high_accuracy_default
+  #if str($source.params.accuracy_default_cond.high_accuracy_default) == "T"
+accuracy_boost = $source.params.accuracy_default_cond.accuracy_boost
+l_accuracy_boost = $source.params.accuracy_default_cond.l_accuracy_boost
+l_sample_boost = $source.params.accuracy_default_cond.l_sample_boost
+  #end if
+#else
+get_scalar_cls = T
+get_vector_cls = F
+get_tensor_cls = T
+get_transfer = T
+do_lensing = T
+l_max_scalar = 2200
+k_eta_max_scalar = 4000
+l_max_tensor = 1500
+k_eta_max_tensor = 3000
+cs2_lam = 1
+temp_cmb = 2.726
+helium_fraction = 0.24
+initial_power_num = 1
+pivot_scalar = 0.05 
+pivot_tensor = 0.05
+initial_ratio(1) = 1
+RECFAST_fudge = 1.14
+RECFAST_fudge_He = 0.86
+RECFAST_Heswitch = 6
+RECFAST_Hswitch = T
+initial_condition = 1
+initial_vector = -1 0 0 0 0
+vector_mode = 0
+COBE_normalize = F
+CMB_outputscale = 7.4311e12
+transfer_high_precision = F
+transfer_kmax = 2
+transfer_k_per_logint = 0
+transfer_num_redshifts = 1
+transfer_interp_matterpower = T
+transfer_redshift(1) = 0
+do_lensing_bispectrum = F
+do_primordial_bispectrum = F
+bispectrum_nfields = 1
+bispectrum_slice_base_L = 0
+bispectrum_ndelta = 3
+bispectrum_delta(1) = 0
+bispectrum_delta(2) = 2
+bispectrum_delta(3) = 4
+bispectrum_do_fisher = F
+bispectrum_fisher_noise = 0
+bispectrum_fisher_noise_pol = 0
+bispectrum_fisher_fwhm_arcmin = 7
+bispectrum_full_output_sparse = F
+bispectrum_export_alpha_beta = F
+feedback_level = 1
+lensing_method = 1
+accurate_BB = F
+massive_nu_approx = 1
+accurate_polarization = T
+accurate_reionization = T
+do_tensor_neutrinos = T
+do_late_rad_truncation = T
+high_accuracy_default = T
+accuracy_boost = 3
+l_accuracy_boost = 1
+l_sample_boost = 1
+#end if
+#end if
+
+transfer_filename(1) = transfer_out.dat
+transfer_matterpower(1) = matterpower.dat
+scalar_output_file = scalCls.dat
+vector_output_file = vecCls.dat
+tensor_output_file = tensCls.dat
+total_output_file = totCls.dat
+lensed_output_file = lensedCls.dat
+lensed_total_output_file = lensedtotCls.dat
+lens_potential_output_file = lenspotentialCls.dat
+FITS_filename = scalCls.fits
+number_of_threads = 0
+
+    </configfile>
+  </configfiles>
+  <help>
+
+
+  </help>
+</tool>

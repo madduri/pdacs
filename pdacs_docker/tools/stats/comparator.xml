@@ -1,0 +1,21 @@
+<tool id="comp" name="Comparison Tools" version="0.0.1">
+  <description>To compare data sets in the history</description>
+     <!--command interpreter="bash">../plotting/r_wrapper.sh $script_file</command-->
+    <command interpreter="bash">
+    #for $i, $s in enumerate( $dataset )
+       ${__root_dir__}/tools/stats/compare.sh ${s.input.file_name} $out_file1
+    #end for
+    </command>
+  <inputs>
+    <repeat name="dataset" title="Data Sets">
+      <param name="input" type="data" format="csv" label="Dataset"/>
+   </repeat>       
+  </inputs>
+
+  <outputs>
+    <data type="data" format="db" name="out_file1"/>
+  </outputs>
+
+<help>
+</help>
+</tool>

@@ -1,0 +1,16 @@
+<globus>
+    <home>/home/ryan/</home>
+    <path>
+        <from>/home/ryan/mytest.txt</from>
+        <to>/home/ryan/mytest.txt</to>
+    </path>
+    <endpoints>
+        <from>go#ep1</from>
+        <to>go#ep2</to>
+    </endpoints>
+    <certificates>
+        <userkey>Documents/Argonne/keys/ltakey.pem</userkey>
+        <usercert>Documents/Argonne/keys/ltacert.pem</usercert>
+        <globus_cert>Documents/Argonne/keys/gd-bundle_ca.cert</globus_cert>
+    </certificates>
+</globus>

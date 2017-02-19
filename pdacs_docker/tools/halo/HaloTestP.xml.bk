@@ -1,0 +1,312 @@
+<tool id="halo_finder" name="Halo Finder"  version="1.0.3">
+  <description>Find halos in a dataset.</description>
+  <command>
+    #set $np_number = int($numProcs) * int($numNodes)
+    mpirun -np $np_number /global/project/projectdirs/hacc/PDACS/HaloFind_v3/HaloTestP $halo_gadget_in_file 
+  </command>
+  <inputs>
+    <param name="inputfile" type="data" size="100" label="Input file"/>
+    <param name="numNodes" type="integer" label="Number of nodes to run on" value="4"/>
+    <param name="numProcs" type="integer" label="Number of processes per node" value="8"/>
+    <param name="inputtype" type="select" label="Input Type">
+	<option value="BLOCK">Block (.gadget2)</option>
+	<option value="RECORD">Record (.cosmo)</option>
+    </param>
+    <param name="distribute" type="select" label="Distribution Type">
+	<option value="ROUND_ROBIN">Round robin</option>
+	<option value="ONE_TO_ONE">One to one</option>
+    </param>
+    <param name="massFactor" type="float" label="Mass factor (all masses read are multiplied by this). Default unit is Msun/h." value="10000000000"/>
+    <param name="overloadZoneSize" type="float" label="Overload zone size (dead zone)" value="5.0"/>
+    <param name="linkingLength" type="float" label="Minimum distance between particles in a halo (bb)" value="0.20"/>
+    <param name="minParticlesPerHalo" type="integer" label="Minimum number of particles in a halo (pmin)" value="10000"/>
+    <param name="deut" type="float" label="Deut" value="0.0231"/>
+    <param name="centerFinder" type="select" label="Center Finder">
+	<option value="MCP">MCP (most connected particle)</option>
+	<option value="MBP">MBP (most bound particle)</option>
+    </param>
+    <param name="minNumberParticles" type="integer" label="The minimum number of particles per halo in the fractional output" value="5"/>    
+    <param name="outputParticleFraction" type="float" label="The fraction of all particles in halos meeting the halo size cut to output" value="0.1"/>
+
+    <!--<param name="shouldOutputHaloCatalog" type="boolean" label="Output Halo Catalog" checked="false"/>
+    <param name="shouldOutputFOFProperties" type="boolean" label="Output FOF Properties" checked="true"/>
+    <param name="shouldOutputSODProperties" type="boolean" label="Output SOD Properties" checked="true"/>
+    <param name="shouldOutputAllParticles" type="boolean" label="Output All Particles" checked="true"/>
+    <param name="shouldOutputAllParticleTags" type="boolean" label="Output All Particle Tags" checked="false"/>-->
+
+    <param name="hubble" type="hidden" label="Hubble constant" value="0.5977"/>
+    <param name="np" type="hidden" label="Number of particles in all files (np^3)" value="512"/>
+    <param name="box_size" type="hidden" label="box_size" value="107.586"/>
+    <param name="Omega_m" type="hidden" label="omega_m" value="0.366133948"/>
+  </inputs>
+  <outputs>
+    <!--<data format="txt" type="data" name="particlesFile" label="Big Halo Particles - ${inputfile.name}" from_work_dir="output.bighaloparticles" />-->
+    <data format="binary" type="data" name="particlesPerHaloFile" label="Halo Particles - ${inputfile.name}" from_work_dir="output.haloparticles" />
+    <!--<data format="txt" type="data" name="haloCatalogFile" label="Halo Catalog - ${inputfile.name}" from_work_dir="output.halocatalog">
+                <filter>shouldOutputHaloCatalog</filter>
+    </data>-->
+    <data format="binary" type="data" name="fofPropertiesFile" label="FOF Properties - ${inputfile.name}" from_work_dir="output.fofproperties">
+                <!--<filter>shouldOutputFOFProperties</filter>-->
+    </data>
+    <data format="binary" type="data" name="sodPropertiesFile" label="SO Properties - ${inputfile.name}" from_work_dir="output.sodproperties">
+                <!--<filter>shouldOutputSODProperties</filter>-->
+    </data>
+    <data format="binary" type="data" name="sodPropertyBinsFile" label="SO Halo Profiles - ${inputfile.name}" from_work_dir="output.sodpropertybins">
+                <!--<filter>shouldOutputSODProperties</filter>-->
+    </data>
+    <!--<data format="txt" type="data" name="allParticlesFile" label="All Particles File - ${inputfile.name}" from_work_dir="output.allparticles">
+                <filter>shouldOutputAllParticles</filter>
+    </data>-->
+    <data format="binary" type="data" name="allParticleTagsFile" label="Particle and Halo Tags - ${inputfile.name}" from_work_dir="output.haloparticletags">
+                <!--<filter>shouldOutputAllParticleTags</filter>-->
+    </data>
+
+    <!--<data format="txt" name="particlesFile" >
+        <filter>outputParticles == True</filter>
+    </data>
+    <data format="txt" name="fofPropertiesFile" >
+        <filter>outputFOFPorperties == True</filter>
+    </data>
+    <data format="txt" name="sodPropertiesFile" >
+        <filter>outputSODProperties == True</filter>
+    </data>
+    <data format="txt" name="particlesPerHaloFile" >
+        <filter>outputParticlesPerHalo == True</filter>
+    </data>
+    <data format="txt" name="allParticleTagsFile" >
+        <filter>outputAllParticleTags == True</filter>
+    </data>-->
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.txt"/>
+    </test>
+  </tests>
+
+  <configfiles>
+    <configfile name="halo_gadget_in_file">
+#import sqlite3 as lite
+#set $con = $lite.connect(str($inputfile))
+#set $cur = $con.cursor()
+#$cur.execute("select value from metadata where name='Snapshot'")
+#$con.commit()
+#set global $row = $cur.fetchone()
+#set $snapshotname = $row[0]
+
+\################################################################################
+\## Header version information
+\################################################################################
+HALOFINDER_HEADER_VERSION 1.0.0
+
+\################################################################################
+\## Input base name ending in '.' if followed by processor id
+\################################################################################
+INPUT_BASE_NAME /global/project/projectdirs/hacc/PDACS/Coyote/Grid/$snapshotname.
+
+\################################################################################
+\## Input data style (RECORD = .cosmo)  (BLOCK = .gadget2)
+\################################################################################
+INPUT_TYPE $inputtype
+
+\################################################################################
+\## Particle distribution style
+\##  ROUND_ROBIN indicates particles must be looked at by all processors
+\##  ONE_TO_ONE  indicates that particles physically reside on matchin processor
+\################################################################################
+DISTRIBUTE_TYPE $distribute
+
+\################################################################################
+\## Output base name
+\################################################################################
+OUTPUT_BASE_NAME output
+
+\################################################################################
+\## Mass factor (all masses read are multiplied by this)
+\## Default unit is Msun/h
+\## Any units may be used, but RHO_C must match those units
+\################################################################################
+MASS_CONVERT_FACTOR $massFactor
+
+\################################################################################
+\## Distance factor (all positions read are multiplied by this)
+\## Default unit is Mpc/h
+\## Any units may be used, but RHO_C must match those units
+\################################################################################
+DIST_CONVERT_FACTOR 1.0
+
+\################################################################################
+\## RHO_C convert factor
+\## Default value of 2.77e11 in units of Msun/h and Mpc/h
+\## Any units may be used, but RHO_C must match those units
+\################################################################################
+RHOC_CONVERT_FACTOR 1.0
+
+\################################################################################
+\## SOD_MASS convert factor
+\## SOD_MASS is used to divide FOF halo mass to get initial SOD radius
+\## Default value of 1.0e14 in units of Msun/h
+\## Any units may be used, but SOD_MASS must match those units
+\################################################################################
+SOD_MASS_CONVERT_FACTOR 1.0
+
+\################################################################################
+\## Box size (rL)
+\################################################################################
+BOX_SIZE $box_size
+
+\################################################################################
+\## Overload zone size (dead zone)
+\################################################################################
+OVERLOAD_SIZE $overloadZoneSize
+
+\################################################################################
+\## Number of particles in all files (np^3)
+\################################################################################
+NUMBER_OF_PARTICLES $np
+
+\################################################################################
+\## Minimum distance between particles in a halo (bb)
+\################################################################################
+MINIMUM_PARTICLE_DISTANCE $linkingLength
+
+\################################################################################
+\## Minimum number of particles in a halo (pmin)
+\################################################################################
+MINIMUM_PARTICLES_PER_HALO $minParticlesPerHalo
+
+\################################################################################
+\## Omega dm
+\################################################################################
+OMEGADM $Omega_m
+
+\################################################################################
+\## Hubble constant
+\################################################################################
+HUBBLE_CONSTANT $hubble
+
+\################################################################################
+\## Subhalo number of particle neighbors used in SPH density calculation
+\## This number of closest neighbors contributes to the local density
+\################################################################################
+NUM_SPH_DENSITY 64
+
+\################################################################################
+\## Subhalo number of particle neighbors used in subhalo grouping
+\## This number of close neighbors are considered when deciding where
+\## to place a particle in the candidates list
+\################################################################################
+NUM_SUBHALO_NEIGHBORS 20
+
+\################################################################################
+\## Subhalo minimum subhalo size
+\## Smallest subhalo recognized as a separate unit
+\################################################################################
+MIN_SUBHALO_SIZE 20
+
+\################################################################################
+\## Subhalo minimum FOF halo size to have subhalo finder run on
+\## Subhalo finder won't run on FOF halos smaller than this number
+\################################################################################
+MIN_FOF_SUBHALO 5000
+
+\################################################################################
+\## Subhalo alpha factor which controls the cut or grow of subhalos
+\## at a saddlepoint.  If set to 1.0 always cut the smaller candidate.
+\## If higher small subhalos and tails grow more aggressively
+\################################################################################
+ALPHA_SUBHALO 1.0
+
+\################################################################################
+\## Subhalo beta factor which controls the Poisson noise significance test
+\## If set to 0.0 then all candidates are deemed significant, if set bigger
+\## small candidates will be absorbed into large one during subgrouping
+\################################################################################
+BETA_SUBHALO 0.0
+
+\################################################################################
+\## Run the MCP (most connected particle) FOF halo center finder
+\################################################################################
+#if str($centerFinder) == 'MCP'
+USE_MCP_CENTER_FINDER 1
+#else
+USE_MCP_CENTER_FINDER 0
+#end if
+
+\################################################################################
+\## Run the MBP (most bound particle) FOF halo center finder
+\################################################################################
+#if str($centerFinder) == 'MBP'
+USE_MBP_CENTER_FINDER 1
+#else
+USE_MBP_CENTER_FINDER 0
+#end if
+
+\################################################################################
+\## Use the minimum potential array already supplied by the simulation
+\################################################################################
+USE_MINIMUM_POTENTIAL 0
+
+\################################################################################
+\## Output all particle data with mass field replaced by halo tag
+\################################################################################
+OUTPUT_PARTICLES 1
+
+\################################################################################
+\## Output the halo catalog of one entry per halo (.cosmo and ascii format)
+\################################################################################
+OUTPUT_HALO_CATALOG 0
+
+\################################################################################
+\## Output FOF halo properties report (ascii)
+\################################################################################
+OUTPUT_FOF_PROPERTIES 1
+
+\################################################################################
+\## Output SOD halo properties report (ascii)
+\################################################################################
+OUTPUT_SOD_PROPERTIES 1
+
+\################################################################################
+\## Output all particles in halos with at least this number of particles
+\################################################################################
+MINIMUM_PARTICLES_PER_OUTPUT_HALO $minParticlesPerHalo
+
+\################################################################################
+\## The fraction of all particles in halos meeting the halo size cut to output
+\################################################################################
+OUTPUT_PARTICLE_FRACTION $outputParticleFraction
+
+\################################################################################
+\## The minimum number of particles per halo in the fractional output
+\################################################################################
+OUTPUT_MINIMUM_PARTICLES_PER_HALO $minNumberParticles
+
+\################################################################################
+\## Output all particle tags
+\################################################################################
+OUTPUT_ALL_PARTICLE_TAGS 1
+
+\################################################################################
+\## Output all particles
+\################################################################################
+OUTPUT_ALL_PARTICLES 0
+
+\################################################################################
+\## Output Subhalo properties report (ascii)
+\################################################################################
+OUTPUT_SUBHALO_PROPERTIES 0
+    </configfile>
+  </configfiles>
+
+
+  <help>
+Distance factor (all positions read are multiplied by this). Default unit is Mpc/h.
+   
+RHO_C convert factor: Default value of 2.77e11 in units of Msun/h and Mpc/h.
+
+SOD_MASS convert factor: SOD_MASS is used to divide FOF halo mass to get initial SOD radius. Default value of 1.0e14 in units of Msun/h.
+  </help>
+</tool>
+

@@ -1,0 +1,53 @@
+GNUPlot.py:#    module load gnuplot
+GNUPlot.py:    cmd = "module load gnuplot; gnuplot %s" % pltPath
+GenericIOPrint.py:module unload pgi
+GenericIOPrint.py:module load gcc
+GenericIOPrint.sh:module unload pgi
+GenericIOPrint.sh:module load gcc
+HaloTestP.py:module unload pgi
+HaloTestP.py:module load gcc
+HaloTestP.py:module load python
+HaloTestP.py:module unload openmpi
+HaloTestP.py.orig:module unload pgi
+HaloTestP.py.orig:module load gcc
+HaloTestP_new.py:module unload pgi
+HaloTestP_new.py:module load gcc
+HaloTestP_original.py:module unload pgi
+HaloTestP_original.py:module load gcc
+MassFunction.py:#some useful piece of code to make sure that MF, cM, fsigma, growth_ode are considered as python modules from whereever they exist in the code
+MassFunction.py:#PYTHON_TOOLS_PATH is an environment variable needed to let the "wrapper" know where rest of the modules or the scripts are. 
+MassFunction.py:#If there are multiple files/modules required by the main python script, they should have __init__.py in the same folder so that wrapper or main tool
+Binary file NewtHelper.pyc matches
+PowerSpectrum.py:    #pbsCmd = "module unload pgi; module load gcc; module load fftw; module load gsl; module load sqlite; mpirun -n %d %s/powerspec.out %s %s %f %s %f" % (numnodes*numprocs, toolsDir, ngrid, options.inputfile, nfiles, outFile, boxsize)
+PowerSpectrum.py:    pbsCmd = "module load fftw; module load gsl; module load sqlite;srun -n %d  %s/powerspec.out %s %s %f %s %f" % (numnodes, toolsDir, ngrid, inFile, nfiles, outFile, boxsize)
+PowerSpectrum.py.bk:module unload pgi
+PowerSpectrum.py.bk:module load gcc
+PowerSpectrum.py.bk:module load fftw
+PowerSpectrum.py.bk:module load gsl   
+PowerSpectrum.py.bk:module load sqlite
+PowerSpectrum.py.newthelper:module unload pgi
+PowerSpectrum.py.newthelper:module load gcc
+PowerSpectrum.py.newthelper:module load fftw
+PowerSpectrum.py.newthelper:module load gsl   
+PowerSpectrum.py.newthelper:module load sqlite
+PowerSpectrum_nersc.py:    #pbsCmd = "module unload pgi; module load gcc; module load fftw; module load gsl; module load sqlite; mpirun -n %d %s/powerspec.out %s %s %f %s %f" % (numnodes*numprocs, toolsDir, ngrid, options.inputfile, nfiles, outFile, boxsize)
+PowerSpectrum_nersc.py:    pbsCmd = "module load fftw; module load gsl; module load sqlite; mpirun -n %d %s/powerspec.out %s %s %f %s %f" % (numnodes*numprocs, toolsDir, ngrid, inFile, nfiles, outFile, boxsize)
+RS_PowerSpectrum.py:    pbsCmd = " module unload pgi; module load gcc; module load fftw; module load gsl; module load sqlite; srun -n %s %s/powerspec.out %s %s %s %s %s %s %s %s" % (numnodes, toolsDir, options.ngrid, infile, nfiles, outFile, boxsize, options.line, w, omega_m)
+RS_PowerSpectrum.py.bk:module unload pgi
+RS_PowerSpectrum.py.bk:module load gcc
+RS_PowerSpectrum.py.bk:module load fftw
+RS_PowerSpectrum.py.bk:module load gsl   
+RS_PowerSpectrum.py.bk:module load sqlite
+Binary file cM-old.pyc matches
+cM_nersc.py:module unload pgi
+cM_nersc.py:module load gcc
+cM_nersc.py:module load gsl
+driver-original.py:#some useful piece of code to make sure that MF, cM, fsigma, growth_ode are considered as python modules from whereever they exist in the code
+driver-original.py:#PYTHON_TOOLS_PATH is an environment variable needed to let the "wrapper" know where rest of the modules or the scripts are. 
+driver-original.py:#If there are multiple files/modules required by the main python script, they should have __init__.py in the same folder so that wrapper or main tool
+driver.py:#some useful piece of code to make sure that MF, cM, fsigma, growth_ode are considered as python modules from whereever they exist in the code
+driver.py:#PYTHON_TOOLS_PATH is an environment variable needed to let the "wrapper" know where rest of the modules or the scripts are. 
+driver.py:#If there are multiple files/modules required by the main python script, they should have __init__.py in the same folder so that wrapper or main tool
+mf.sh:module unload pgi
+mf.sh:module load gcc
+Binary file newthelper.pyc matches

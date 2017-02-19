@@ -1,0 +1,2 @@
+This is a Galaxy visualization plugin that uses gnuplot-emscripten to embed gnuplot to produce plots of data in a history.
+
