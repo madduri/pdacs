@@ -1,0 +1,27 @@
+GENIOD  = genericio
+CC      = mpicxx
+CFLAGS  = -I. -O2 -g
+LDFLAGS = -Lgenericio/genericio.build/libs -lGenericIO -lfftw3
+INC_DIR = dtk
+SRC_DIR = src
+OBJ_DIR = obj
+LIB_DIR = lib
+SOURCES = $(wildcard src/*.cpp)
+OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)
+LIB_NAME= libdtk.a
+LIB     = $(LIB_DIR)/${LIB_NAME}
+
+
+
+${LIB}: ${OBJECTS}
+	ar rcs ${LIB} ${OBJECTS}
+
+${OBJECTS}: ${OBJ_DIR}/%.o : ${SRC_DIR}/%.cpp
+	${CC} ${CFLAGS} -c -o $@ $<
+
+
+.PHONY:
+clean:
+	rm ${OBJECTS}
+	rm ${LIB}
+

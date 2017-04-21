@@ -1,0 +1,39 @@
+
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+
+
+def cat_strings(strings):
+    string_result = "";
+    for st in strings:
+        string_result +=st;
+    return string_result;
+
+
+def replace_strings(strings,target,new_val):
+    st_result = []
+    for st in strings:
+        if(st==target):
+            st=str(new_val)
+        st_result.append(st)
+    return st_result
+        
+def cat_replace_strings(strings,target,new_val):
+    return cat_strings(replace_strings(strings,target,new_val))
+
+
+def ensure_dir(f):
+    d = os.path.dirname(f)
+    if not os.path.exists(d):
+        os.makedirs(d)
+
+figcount =1
+
+def save_figs(path):
+    global figcount
+    ensure_dir(path)
+    for i in plt.get_fignums():
+        plt.figure(i)
+        plt.savefig(""+path+'fig%d.png' % figcount)
+        figcount+=1

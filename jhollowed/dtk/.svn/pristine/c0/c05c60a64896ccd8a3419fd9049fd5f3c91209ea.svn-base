@@ -1,0 +1,17 @@
+
+#include <sstream>
+
+#include "dtk/util.hpp"
+
+
+namespace dtk{
+  std::string cat_strings(std::vector<std::string> strings){
+    std::stringstream ss;
+    for(uint i =0;i<strings.size();++i){
+      ss<<strings[i];
+    }
+    return ss.str();
+  }
+  
+
+}

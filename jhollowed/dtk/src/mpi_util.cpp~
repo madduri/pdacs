@@ -1,0 +1,27 @@
+
+
+#include <mpi.h>
+
+#include "mpi_util.hpp"
+
+void broadcast_param(Param param,int root,MPI_Communicator comm){
+  int myrank;
+  MPI_Comm_rank(comm,&myrank);
+  std::string param_str;
+  char* param_cstr;
+  int   param_cstr_size;
+  if(myrank == root){
+    param_str = param.stringify();
+    param_cstr = param_str.c_str();
+    param_cstr_size = param_str.size()+1; //+1 for null char
+  }
+  MPI_Bcast(param_cstr_size,1,MPI_INT,comm);
+  if(myrank != root)
+    param_cstr = new char[param_cstr_size];
+  MPI_Bcast(param_cstr,mparam_cstr_size,MPI_CHAR,comm);
+  if(myrank != root){
+    param_str.assign(param_cstr,param_cstr_size);
+    param.load(param_str);
+    delete [] param_cstr;
+  }
+}
