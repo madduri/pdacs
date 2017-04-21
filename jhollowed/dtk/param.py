@@ -67,9 +67,9 @@ class Param:
         elif(val == "false" or val == "False" or val == "FALSE" or val == "F" or val == "f" or val == "0"):
             return False
         else:
-            print "\n\nError: At least one value in parameter \"%s\" cannot convert to bool." %(var_name)
-            print "Values: ",self.data[var_name]
-            print "Aborting.\n"
+            print("\n\nError: At least one value in parameter \"%s\" cannot convert to bool." %(var_name))
+            print("Values: ",self.data[var_name])
+            print("Aborting.\n")
             raise err
 
         
@@ -94,12 +94,12 @@ class Param:
         try:
             return self.data[var_name].astype(dtype)
         except ValueError as err:
-            print "\n\nError: At least one value in parameter \"%s\" cannot convert to %s." %(var_name,str(dtype))
-            print "Values: ",self.data[var_name]
-            print "Aborting.\n"
+            print("\n\nError: At least one value in parameter \"%s\" cannot convert to %s." %(var_name,str(dtype)))
+            print("Values: ",self.data[var_name])
+            print("Aborting.\n")
             raise err
         except KeyError as err:
-            print "\n\nError: Parameter file does not have \"%s\" as parameter.\nAborting.\n" % var_name
+            print("\n\nError: Parameter file does not have \"%s\" as parameter.\nAborting.\n" % var_name)
             raise err
             
 

@@ -33,10 +33,10 @@ def gio_read(file_name,var_name):
     var_size = libpygio.get_elem_num(file_name)
     var_type = libpygio.get_variable_type(file_name,var_name)
     if(var_type==10):
-        print("Variable not found")
+        print "Variable not found"
         return
     elif(var_type==9):
-        print("variable type not known (not int32/int64/float/double)")
+        print "variable type not known (not int32/int64/float/double)"
     elif(var_type==0):
         #float
         result = np.ndarray(var_size,dtype=np.float32)
