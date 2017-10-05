@@ -19,6 +19,24 @@ var pdacsProject = (function(){
       }
     });
 
+var sliderValue2 = 0;
+	var handle = $( "#custom-handle2" );
+    $( "#slider2" ).slider({
+      value:1,
+      min: 1,
+      max: 1000,
+      step: 10,
+      create: function() {
+        handle.text( $( this ).slider( "value" ) );
+        sliderValue1 = $( this ).slider( "value" );
+      },
+      slide: function( event, ui ) {
+		//alert(ui.value)
+        handle.text( ui.value );
+        sliderValue2 = ui.value;
+      }
+    });
+
     var grid = $("#grid");
     grid.jqGrid({
         colModel: [
@@ -27,7 +45,7 @@ var pdacsProject = (function(){
 	        { name: "Realization",width:100},
 	        { name: "n_s",width:85},
 	        { name: "box_size", width:80,sorttype:'float', searchoptions:{sopt:['eq','ne','le','lt','gt','ge']}},
-	        { name: "np",width:55, sorttype:'string',searchoptions:{sopt:['cn']}},
+	        { name: "np",width:55, sorttype:'integer',searchoptions:{sopt:['eq']}},
 	        { name: "hubble",width:80,sorttype:'float', searchoptions:{sopt:['eq','ne','le','lt','gt','ge']}},
             { name: "z_in",width:55},
 	        { name: "Omega_bar",width:95,sorttype:'float',searchoptions:{sopt:['eq','ne','le','lt','gt','ge']}},
@@ -3225,7 +3243,8 @@ var pdacsProject = (function(){
 
     $("#filterButton").click(function() {
     	
-    	var checkboxes = document.getElementsByName("boxsize");
+		var checkboxes = document.getElementsByName("boxsize");
+		var npcheckboxes = document.getElementsByName("np");
     	var f = {groupOp:"AND",rules:[]};
 
 
@@ -3234,9 +3253,9 @@ var pdacsProject = (function(){
     			f.rules.push({field:"BoxSize",op:"cn",data:checkboxes[i].value});
     		}    		
 		}
-		for(var i=0; i<checkboxes.length; i++){
-    		if(checkboxes[i].checked){
-    			f.rules.push({field:"np",op:"cn",data:checkboxes[i].value});
+		for(var i=0; i<npcheckboxes.length; i++){
+    		if(npcheckboxes[i].checked){
+    			f.rules.push({field:"np",op:"eq",data:npcheckboxes[i].value});
     		}    		
     	}
     	f.rules.push({field:"hubble", op:"le", data:sliderValue});

@@ -19,6 +19,24 @@ var pdacsProject = (function(){
       }
     });
 
+var sliderValue2 = 0;
+	var handle = $( "#custom-handle2" );
+    $( "#slider2" ).slider({
+      value:1,
+      min: 1,
+      max: 1000,
+      step: 10,
+      create: function() {
+        handle.text( $( this ).slider( "value" ) );
+        sliderValue1 = $( this ).slider( "value" );
+      },
+      slide: function( event, ui ) {
+		//alert(ui.value)
+        handle.text( ui.value );
+        sliderValue2 = ui.value;
+      }
+    });
+
     var grid = $("#grid");
     grid.jqGrid({
         colModel: [
