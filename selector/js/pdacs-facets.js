@@ -3232,6 +3232,7 @@ var sliderValue2 = 0;
 		    }
 		],
 		guiStyle: "bootstrap",
+		multiselect: true,
 		iconSet: "fontAwesome",
     	rownumbers: true,
     	loadonce: true,
@@ -3239,7 +3240,7 @@ var sliderValue2 = 0;
     	pager: '#pager27'
 
     });
-   grid.jqGrid('filterToolbar', {searchOperators : true});
+   	grid.jqGrid('filterToolbar', {searchOperators : true});
 
     $("#filterButton").click(function() {
     	
@@ -3264,20 +3265,28 @@ var sliderValue2 = 0;
 		$.extend(grid[0].p.postData,{filters:JSON.stringify(f)});
 		grid.trigger("reloadGrid",[{page:1,current:true}]);
 
-
-                /*var searchFiler = $("#filter").val(), f;
-
-                if (searchFiler.length === 0) {
-                    grid[0].p.search = false;
-                    $.extend(grid[0].p.postData,{filters:""});
-                }
-                f = {groupOp:"OR",rules:[]};
-                f.rules.push({field:"name",op:"cn",data:searchFiler});
-                f.rules.push({field:"note",op:"cn",data:searchFiler});
-                grid[0].p.search = true;
-                $.extend(grid[0].p.postData,{filters:JSON.stringify(f)});
-                grid.trigger("reloadGrid",[{page:1,current:true}]);*/
      });
+
+    $("#selectall").click(function(){
+    	var ids = grid.jqGrid('getGridParam','selarrrow');
+    	if (ids.length>0) {
+	        var names = [];
+			var rows = grid.jqGrid('getRowData');
+			var rowsArray = [];
+			
+	        for (var i=0, il=ids.length; i < il; i++) {
+	            var name = grid.jqGrid('getCell', ids[i], 'BoxSize');
+	            names.push(name);
+	            rowsArray.push(rows[i]);
+	        }
+	        //alert ("BoxSize: " + names.join(", "));
+	        alert("Row1: " + JSON.stringify(rowsArray[0]));
+	    }else{
+	    	alert("No rows selected");
+	    }
+
+
+    });
 
 
 })();
