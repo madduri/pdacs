@@ -67,7 +67,7 @@
       <div class="row">
         
         <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
-          <form>
+          <form method="get" action ="https://dev.globusgenomics.org">
           <h5>Cosmology</h5>
               <ul class="nav nav-pills flex-column">
                   <li class="nav-item">
@@ -130,19 +130,35 @@
                
             </ul>
             <BR><BR>
+            <input type="HIDDEN" value="table" name="outputType">
+            <input type="HIDDEN" value="cherrypy" name="tool_id">
+            <input type="HIDDEN" value="https://dev.globusgenomics.org/generate" name="URL">
+
             <button type="button reset" class="btn btn-link">Reset</button>
             <button type="button" class="btn btn-primary" id = "filterButton">Filter</button>
+            <button type="submit">Send result to galaxy!</button>
           </form>
 
 
         </nav>
 
         <main class="col-sm-9 ml-sm-auto col-md-10 pt-3" role="main">
+    <!--
+	<FORM ACTION="https://dev.globusgenomics.org/generate" METHOD=POST>
           <h2>Available Models</h2>
+	  <input type="text" name="e_site" id="e_site" value="test"/>
           <p><button type="botton" class="btn btn-primary" id = "selectall"> Import Rows </button></p>          
+	  </form>
+      -->
+                        <form method="get" action="https://dev.globusgenomics.org/tool_runner">
+                            <input type="text" id = "lengthid" value="8" name="length" />
+                            <input type="HIDDEN" value="cherrypy" name="tool_id">
+                            <input type="HIDDEN" value="table" name="outputType">
+                            <input type="HIDDEN" value="http://localhost:8090/generate" name="URL">
+                            <button type="submit" class="btn btn-primary" id= "selectall"> Send result to galaxy! </button>
           <table id="grid"></table>
           <!-- <div id="pager27" ></div> -->
-
+		</form>
         </main>
       </div>
     </div>
@@ -161,7 +177,7 @@
     <script src="https://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/bootstrap-slider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.1/jquery.jqgrid.min.js"></script>
-    <script src="../js/pdacs-facets.js" type="text/javascript"></script>
+    <script src="https://dev.globusgenomics.org/static/pdacs-js/js/pdacs-facets.js" type="text/javascript"></script>
 
 
 
