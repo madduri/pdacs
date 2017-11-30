@@ -19,21 +19,38 @@ var pdacsProject = (function(){
       }
     });
 
-var sliderValue2 = 0;
-	var handle = $( "#custom-handle2" );
+	var sliderValue2 = 0;
+	var handle2 = $( "#custom-handle2" );
     $( "#slider2" ).slider({
       value:1,
       min: 1,
       max: 1000,
       step: 10,
       create: function() {
-        handle.text( $( this ).slider( "value" ) );
-        sliderValue1 = $( this ).slider( "value" );
+        handle2.text( $( this ).slider( "value" ) );
+        sliderValue2 = $( this ).slider( "value" );
       },
       slide: function( event, ui ) {
 		//alert(ui.value)
-        handle.text( ui.value );
+        handle2.text( ui.value );
         sliderValue2 = ui.value;
+      }
+    });
+	var sliderValue3 = 0;
+	var handle3 = $( "#custom-handle3" );
+    $( "#slider3" ).slider({
+      value:0,
+      min: 0,
+      max: 1,
+      step: 0.1,
+      create: function() {
+        handle3.text( $( this ).slider( "value" ) );
+        sliderValue3 = $( this ).slider( "value" );
+      },
+      slide: function( event, ui ) {
+		//alert(ui.value)
+        handle3.text( ui.value );
+        sliderValue3 = ui.value;
       }
     });
 
