@@ -1,0 +1,25 @@
+<tool id="generic_io_print" name="ASCII converter">
+  <description>Convert binary outputs from halo finder into ASCII files</description>
+  <command>
+    ${__root_dir__}/tools/halo/GenericIOPrint.sh $input $outFile ${__root_dir__}
+  </command>
+  <inputs>
+    <param name="input" type="data" format="binary" size="100" label="The input file">
+      <sanitizer sanitize="False"/>
+    </param>
+    <param name="noRank" type="boolean" label="No rank info"/>
+  </inputs>
+  <outputs>
+    <data name="outFile" type="data" format="csv" label="${input.name}.ascii"/>
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.txt"/>
+    </test>
+  </tests>
+  <help>
+  Print the file as ASCII.
+  </help>
+</tool>

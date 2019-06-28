@@ -1,0 +1,27 @@
+<tool id="cm" name="cM">
+  <description>Run the concentration-mass relation tool</description>
+  
+  <command interpreter="python">cM.py --m $m --b $b --ns $ns --w $w --s $s --z $z --outFile $output</command>
+
+  <inputs>
+    <param name="m"  label="Omega_m h^2"  type="float" value="0.1279" min="0.120" max="0.155"/>
+    <param name="b"  label="Omega_b h^2"  type="float" value="0.0232" min="0.0215" max="0.0235"/>
+    <param name="ns" label="n_s"          type="float" value="0.8629" min="0.85" max="1.05"/>
+    <param name="w"  label="w"            type="float" value="-1.184" min="-1.30" max="-0.70"/>
+    <param name="s"  label="sigma_8"      type="float" value="0.6159" min="0.61" max="0.9"/>
+    <param name="z"  label="z"            type="float" value="1.0"    min="0.0" max="1.0"/>
+    <sanitizer sanitize="False"/>
+  </inputs>
+
+  <outputs>
+    <data format="cm" name="output" />
+  </outputs>
+
+  <stdio>
+    <exit_code range="1:" level="fatal" description="Nonzero return status" />
+  </stdio>
+
+  <help>
+    Run the concentration-mass relation tool, using the supplied inputs, writing the given output file.
+  </help>
+</tool>

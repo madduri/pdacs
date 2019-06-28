@@ -1,0 +1,3 @@
+#Simulation	Type	Model	Size	Realization	Snapshot	Full-Path
+Coyote	Grid	M001	L180	G001	input.M001	/project/projectdirs/hacc/PDACS/Halo_analysis_v2/input.M001
+Coyote	Grid	M001	L180	G001	input.M002	/project/projectdirs/hacc/PDACS/Halo_analysis_v2/input.M001

@@ -1,0 +1,48 @@
+<tool id="comp" name="Comparator Tool" version="0.0.1">
+  <description>for multiple series</description>
+  <command interpreter="bash">${__root_dir__}/tools/plotting/r_wrapper.sh $script_file</command>
+   <!--command interpreter="Rscript">
+    ${__root_dir__}/tools/stats/comparator.r 
+    for $i, $s in enumerate( $series )
+	${s.input.file_name} "${s.input.name}" ${s.tabname} ${out_file1}
+    end for
+  </command-->
+  <inputs>
+    <repeat name="series" title="Series">
+      <param name="input" type="data" format="csv" label="Dataset"/>
+      <param name="tabname" type="text" value="" size="30" label="Dataset name" help="Users can provide name for table in the combined dataset, if left blank, a unique and appropriate name will be assigned to the table"/>
+   </repeat>       
+  </inputs>
+
+  <configfiles>
+    <configfile name="script_file">
+      ## Setup R error handling to go to stderr
+      suppressPackageStartupMessages(library(RSQLite))
+      driver = dbDriver("SQLite")
+      conn = dbConnect(driver, dbname="${out_file1}")
+      on.exit(dbDisconnect(conn))
+      on.exit(dbUnloadDriver(drv), add=TRUE)
+      ires = dbSendQuery(conn=conn, "create table metadata(key TEXT, value NUMERIC)")
+      dbClearResult(ires)
+      #for $i, $s in enumerate( $series )
+          s${i} = read.table( "${s.input.file_name}", sep="\t", header=TRUE)
+          tempname = "${s.tabname}"
+          print(tempname)
+          if (nchar(tempname) == 0) {
+            tabname1 = strsplit("${s.input.name}", " on")
+            tabname2 = strsplit("${s.input.file_name}", "_")
+            tempname = paste(tabname1[[1]][1], tabname2[[1]][2])
+          }
+          tablename = toString(strsplit(gsub('([[:punct:]])|\\s+','_', tempname), ".dat"))
+          ires = dbWriteTable(conn=conn, name=tablename, value=as.data.frame(s${i}), row.names=FALSE, header=TRUE)
+      #end for 
+    </configfile>
+  </configfiles>
+
+  <outputs>
+    <data type="data" format="db" name="out_file1"/>
+  </outputs>
+
+<help>
+</help>
+</tool>

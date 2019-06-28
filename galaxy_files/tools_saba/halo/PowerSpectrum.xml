@@ -1,0 +1,37 @@
+<tool id="power_spectrum" name="Power Spectrum"  version="0.0.0">
+  <description>Measure matter power spectrum</description>
+  <command interpreter="python">
+    PowerSpectrum.py
+    --inputfile=$inputfile
+    --ngrid=$ngrid
+    --outfile=$outfile
+    --numNodes=$numNodes
+    --numProcs=$numProcs
+    --exeTime=$exeTime 
+    --exeQueue=$exeQueue 
+  </command>
+  <inputs>
+    <param name="inputfile" type="data" format="dbm" size="100" label="Input Snapshot" area="True"/>
+    <sanitizer sanitize="False"/>
+    <param name="numNodes" type="integer" label="Number of nodes to run on" value="2"/>
+    <param name="numProcs" type="integer" label="Number of processes per node" value="8"/>
+    <param name="exeTime" type="integer" label="Estimated job execution time" value="5" help="Specified in minutes"/>
+    <param name="exeQueue" type="select" label="Specify queue for job submission" help="Debug for smaller test jobs, and regular for longer, production jobs">
+        <option value="debug">Debug</option>
+        <option value="regular">Regular</option>
+    </param>
+    <param name="ngrid" type="integer" label="Number of grids" value="128"/>
+  </inputs>
+  <outputs>
+    <data type="data" format="csv" name="outfile" label="Power spectrum on ${inputfile.name}" />
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.txt"/>
+    </test>
+  </tests>
+  <help>
+  </help>
+</tool>

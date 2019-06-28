@@ -1,0 +1,42 @@
+<tool id="power_spectrum_1" name="Power Spectrum in Redshift Space"  version="0.0.0">
+  <description>Measure matter power spectrum in redshift space</description>
+  <command interpreter="python">
+    RS_PowerSpectrum.py
+    --inputfile=$inputfile
+    --ngrid=$ngrid
+    --outfile_2d=$outfile2D
+    --outfile_multipole=$outfilemultipole
+    --numNodes=$numNodes
+    --numProcs=$numProcs
+    --line=$line
+    --exeTime=$exeTime
+    --exeQueue=$exeQueue
+  </command>
+  <inputs>
+    <param name="inputfile" type="data" format="dbm" size="300" label="Input Snapshot" area="True"/>
+    <sanitizer sanitize="False"/>
+    <param name="numNodes" type="integer" label="Number of nodes to run on" value="2"/>
+    <param name="numProcs" type="integer" label="Number of processes per node" value="8"/>
+    <param name="exeTime" type="integer" label="Estimated job execution time" value="5" help="Specified in minutes"/>
+    <param name="exeQueue" type="select" label="Specify queue for job submission" help="Debug for smaller test jobs, and regular for longer, production jobs">
+        <option value="debug">Debug</option>
+        <option value="regular">Regular</option>
+    </param>
+    <param name="ngrid" type="integer" label="Number of grids" value="128"/>
+    <param name="line" type="float" label="Line of sight" value="0" help="It should be an integer either 0, 1 or 2 to align the line of sight with 
+the x, y or z axis respectively."/>
+  </inputs>
+  <outputs>
+    <data type="data" format="csv" name="outfile2D" label="Power spectrum with redshift on ${inputfile.name}" />
+    <data type="data" format="csv" name="outfilemultipole" label="Power spectrum with redshift on ${inputfile.name}" />
+  </outputs>
+  <tests>
+    <test>
+      <!-- TODO: UPDATE TEST CASE -->
+      <param name="namefield" value="Bob"/>
+      <output name="out_file1" file="helloworld_out.txt"/>
+    </test>
+  </tests>
+  <help>
+  </help>
+</tool>
